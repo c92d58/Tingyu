@@ -20,7 +20,6 @@ export default defineConfig({
     skipInline: false,
     drafts: true
   },
-  site: 'https://c92d58.github.io',
-  base: '/blog',
+  site: 'https://blog.wahsun.org',
   integrations: [sitemap(), mdx()]
 });
