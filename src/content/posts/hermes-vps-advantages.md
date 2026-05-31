@@ -9,7 +9,6 @@ image:
 tags: ['Hermes Agent', 'VPS', '自架部署', '開源', 'DevOps']
 ---
 
-上篇文章記錄了我為什麼從 ChatGPT 轉向自架 Hermes Agent 的心路歷程。這篇更務實一些——**將 Hermes 跑在 VPS 上到底有什麼具體的技術優勢？**
 
 如果你正在考慮是否要把 AI 代理放到自己的伺服器上，這篇文章會給你一個完整的評估框架。
 
