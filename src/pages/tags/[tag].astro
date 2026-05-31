@@ -43,7 +43,7 @@ const { posts } = Astro.props;
         {
           posts.map((post) => (
             <BlogEntries
-              url={"/blog/posts/" + post.id}
+              url={"/posts/" + post.id}
               title={post.data.title}
               description={post.data.description}
               alt={post.data.title}
