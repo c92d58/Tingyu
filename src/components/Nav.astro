@@ -3,7 +3,7 @@ const currentPath = Astro.url.pathname;
 ---
 
 <nav class="nav">
-  <a href="/" class="nav-brand">BLOG</a>
+  <a href="/" class="nav-brand">部落格</a>
   <div class="nav-links">
     <a href="/tags" class:list={[{ active: currentPath.startsWith("/tags") }]}>標籤</a>
     <a href="/search" class:list={[{ active: currentPath === "/search" || currentPath === "/search/" }]}>搜尋</a>
