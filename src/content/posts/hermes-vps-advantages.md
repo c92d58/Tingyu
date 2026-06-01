@@ -1,5 +1,5 @@
 ---
-title: '在 VPS 上建立 Hermes 的優勢'
+title: '🏠 為什麼我在自己伺服器上跑 Hermes Agent'
 pubDate: 2026-06-01
 description: '從模型靈活性、資料主權到自動化排程——完整分析為什麼將 Hermes Agent 部署在自己的 VPS 上是一項值得的投資'
 author: 'WAHSUN'
