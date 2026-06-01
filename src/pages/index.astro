@@ -4,7 +4,6 @@ import BlogEntries from "@/components/entries/BlogEntry.astro";
 import Cta from "@/components/global/Cta.astro";
 import { getCollection } from "astro:content";
 const allPosts = await getCollection("posts");
-const tags = [...new Set(allPosts.map((post) => post.data.tags).flat())];
 // Sort posts by date in descending order (newest first)
 const sortedPosts = allPosts.sort(
   (a, b) =>
@@ -20,18 +19,7 @@ const sortedPosts = allPosts.sort(
       >
         個人部落格，記錄技術與生活。
       </h1>
-      <div class="flex flex-wrap gap-3 mt-8">
-        {
-          tags.map((tag) => (
-            <a
-              class=" hover:text-blue-500 text-xs font-medium text-base-600"
-              href={`/tags/${tag}`}
-            >
-              {tag}
-            </a>
-          ))
-        }
-      </div>
+
       <div class="grid grid-cols-1 mt-4 gap-8 gap-y-24 sm:grid-cols-2">
         {
           sortedPosts.map((post) => (
