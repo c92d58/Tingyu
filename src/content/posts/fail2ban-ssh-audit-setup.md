@@ -92,7 +92,7 @@ action = %(action_mwl)s
 
 [sshd]
 enabled  = true
-port     = 28898
+port     = 22
 filter   = sshd
 logpath  = %(systemd_journal)s
 maxretry = 3
@@ -116,7 +116,7 @@ cat >> /etc/fail2ban/jail.local <<'EOF'
 [sshd-audit]
 enabled  = true
 filter   = sshd-audit
-port     = 28898
+port     = 22
 logpath  = /var/log/sshd-audit.log
 maxretry = 2
 bantime  = 48h
@@ -163,7 +163,7 @@ fail2ban-client status sshd-audit
 | `findtime` | 10m | 監控時間窗口，10 分鐘內累計計算 |
 | `maxretry` | 3 | 觸發封禁的失敗次數 |
 | `backend` | systemd | 從 journald 讀取日誌，而非檔案 |
-| `port` | 28898 | 你的自定義 SSH 端口（按實際修改） |
+| `port` | 22 | 你的自定義 SSH 端口（按實際修改） |
 
 ### `sshd-audit` — 增強審計規則
 
@@ -235,7 +235,7 @@ fail2ban-client set sshd unbanip YOUR_IP
 
 ### Q: 修改 SSH 端口後需要調整什麼？
 
-將 `jail.local` 中的 `port = 28898` 改為你的實際端口，然後重新啟動 fail2ban：
+將 `jail.local` 中的 `port = 22` 改為你的實際端口，然後重新啟動 fail2ban：
 
 ```bash
 systemctl restart fail2ban
