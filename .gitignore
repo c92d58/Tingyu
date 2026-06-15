@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+pnpm-lock.yaml
 
 # Astro
 .astro/
@@ -28,3 +29,4 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+pnpm-lock.yaml
