@@ -1,6 +1,6 @@
 ---
 title: 'Fail2ban + SSH 審計聯動：VPS 公網最佳防護方案'
-description: '一套完整的 SSH 暴力破解防護方案，整合 Fail2ban、Systemd 日誌與審計記錄，實現即時封禁、可回溯、不誤傷公鑰用戶的生產級配置。'
+description: '一套完整的 SSH 暴力破解防護方案，整合 Fail2ban、Systemd 日誌與審計記錄，實現即時封禁、可回溯、不誤傷公鑰使用者的生產級配置。'
 date: 2026-06-04
 tags: ['Linux', '安全', 'SSH', 'Fail2ban', 'DevOps', '伺服器']
 draft: false
@@ -15,8 +15,8 @@ draft: false
 | 威脅 | 純金鑰能抵禦？ | Fail2ban 能加強？ |
 |------|:--------------:|:-----------------:|
 | 字典掃描（密碼嘗試） | ✅ 是（已禁用密碼） | 🟡 減少日誌噪音 |
-| 金鑰暴力枚舉 | ❌ 否（sshd 照樣記錄） | ✅ 封禁此類連線 |
-| 非標準端口命中 | ❌ 否 | ✅ 監控自定義端口 |
+| 金鑰暴力列舉 | ❌ 否（sshd 照樣記錄） | ✅ 封禁此類連線 |
+| 非標準埠命中 | ❌ 否 | ✅ 監控自定義埠 |
 | DoS 類連線泛洪 | ❌ 部分 | ✅ 自動封禁 |
 
 即使你只使用金鑰登入，攻擊者仍會嘗試**無效使用者**和**無效金鑰**，這些連線本身就會增加系統負擔和日誌大小。本文提供的方案會將這些行為**即時封禁**並**完整記錄**到審計日誌中。
@@ -40,12 +40,12 @@ SSH 連線請求
     │       │
     │       └─▶ [sshd-audit] jail ──▶ 2 次異常 ──▶ 封禁 48h
     │
-    └─▶ 正常金鑰登入 ──▶ 通過（不受影響）
+    └─▶ 正常金鑰登入 ──▶ 透過（不受影響）
 ```
 
-## 部署腳本
+## 部署指令碼
 
-以下是一鍵部署腳本，可直接在 Debian/Ubuntu 系統上執行：
+以下是一鍵部署指令碼，可直接在 Debian/Ubuntu 系統上執行：
 
 ```bash
 #!/usr/bin/env bash
@@ -135,13 +135,13 @@ fail2ban-client status sshd-audit
 
 ### `jail.local` — 主要防護規則
 
-| 參數 | 值 | 說明 |
+| 引數 | 值 | 說明 |
 |------|------|------|
 | `bantime` | 24h | 封禁持續時間，一天後自動解封 |
-| `findtime` | 10m | 監控時間窗口，10 分鐘內累計計算 |
+| `findtime` | 10m | 監控時間視窗，10 分鐘內累計計算 |
 | `maxretry` | 3 | 觸發封禁的失敗次數 |
 | `backend` | systemd | 從 journald 讀取日誌，而非檔案 |
-| `port` | 22 | 你的自定義 SSH 端口（按實際修改） |
+| `port` | 22 | 你的自定義 SSH 埠（按實際修改） |
 
 ### `sshd-audit` — 增強審計規則
 
@@ -158,13 +158,13 @@ fail2ban-client status sshd-audit
 ### 狀態查詢
 
 ```bash
-# 查看所有監控的 jail
+# 檢視所有監控的 jail
 fail2ban-client status
 
-# 查看 SSH 防護狀態
+# 檢視 SSH 防護狀態
 fail2ban-client status sshd
 
-# 查看審計防護狀態
+# 檢視審計防護狀態
 fail2ban-client status sshd-audit
 ```
 
@@ -174,14 +174,14 @@ fail2ban-client status sshd-audit
 # 解封某個 IP
 fail2ban-client set sshd unbanip 1.2.3.4
 
-# 查看封禁日誌（journald）
+# 檢視封禁日誌（journald）
 journalctl -t fail2ban
 
 # 即時監控審計日誌
 tail -f /var/log/sshd-audit.log
 ```
 
-### 查看已封禁 IP
+### 檢視已封禁 IP
 
 ```bash
 # iptables 封禁列表
@@ -203,15 +203,15 @@ fail2ban-client status sshd | grep "Banned IP list"
 fail2ban-client set sshd unbanip YOUR_IP
 ```
 
-### Q: 修改 SSH 端口後需要調整什麼？
+### Q: 修改 SSH 埠後需要調整什麼？
 
-將 `jail.local` 中的 `port = 22` 改為你的實際端口，然後重新啟動 fail2ban：
+將 `jail.local` 中的 `port = 22` 改為你的實際埠，然後重新啟動 fail2ban：
 
 ```bash
 systemctl restart fail2ban
 ```
 
-### Q: 如何查看歷史封禁記錄？
+### Q: 如何檢視歷史封禁記錄？
 
 ```bash
 journalctl -t fail2ban --since "7 days ago"
@@ -221,4 +221,4 @@ journalctl -t fail2ban --since "7 days ago"
 
 ## 結語
 
-安全不是一次性的配置，而是持續的習慣。Fail2ban + SSH 審計聯動方案的核心價值在於：**讓機器處理常規威脅，讓人類專注於例外事件**。當你的 VPS 每天被掃描數百次時，一個自動化的封禁系統比任何手動監控都可靠。配置好之後，它會安安靜靜地在背景運行——直到有需要的那一天，你會感謝自己提前做了這件事。
+安全不是一次性的配置，而是持續的習慣。Fail2ban + SSH 審計聯動方案的核心價值在於：**讓機器處理常規威脅，讓人類專注於例外事件**。當你的 VPS 每天被掃描數百次時，一個自動化的封禁系統比任何手動監控都可靠。配置好之後，它會安安靜靜地在背景執行——直到有需要的那一天，你會感謝自己提前做了這件事。
