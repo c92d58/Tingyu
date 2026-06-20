@@ -18,28 +18,208 @@ import Prose from "../components/Prose.astro";
     },
   })} />
   <section class="about">
-    <Heading as="h1"> </Heading>
-    <Prose>
-      <p>
-        WAHSUN 的數位庭園，由好奇心牽著走的自學角落。
-      </p>
-      <p>
-        這裡沒有工程師的頭銜，只有一個樂於拆解、嘗試與記錄的靈魂。
-        從自架伺服器到 AI 工具探索，從命令列到生活哲學，
-        每篇文章都是一次「邊做邊學」的足跡。
-      </p>
-      <p>
-        沒有電子報。沒有彈窗。沒有追蹤。只有文字。
-      </p>
-      <p>
-        信箱：<a href="mailto:x@wahsun.org">x@wahsun.org</a>
-      </p>
-    </Prose>
+    <div class="about-hero">
+      <div class="about-avatar">
+        <span class="avatar-letter">W</span>
+        <span class="avatar-ring"></span>
+      </div>
+      <Heading as="h1"> </Heading>
+      <p class="about-subtitle">WAHSUN 的數位庭園</p>
+    </div>
+
+    <div class="about-card">
+      <div class="about-card-accent"></div>
+      <Prose>
+        <p>
+          由好奇心牽著走的自學角落。
+        </p>
+        <p>
+          這裡沒有工程師的頭銜，只有一個樂於拆解、嘗試與記錄的靈魂。
+          從自架伺服器到 AI 工具探索，從命令列到生活哲學，
+          每篇文章都是一次「邊做邊學」的足跡。
+        </p>
+      </Prose>
+    </div>
+
+    <div class="about-card">
+      <div class="about-card-accent"></div>
+      <Prose>
+        <p>
+          沒有電子報。沒有彈窗。沒有追蹤。只有文字。
+        </p>
+        <p>
+          信箱：<a href="mailto:x@wahsun.org" class="about-email">x@wahsun.org</a>
+        </p>
+      </Prose>
+    </div>
+
+    <div class="about-stats">
+      <div class="stat-item animate-fade-up delay-1">
+        <span class="stat-number">自架</span>
+        <span class="stat-label">Infrastructure</span>
+      </div>
+      <div class="stat-item animate-fade-up delay-2">
+        <span class="stat-number">自學</span>
+        <span class="stat-label">Self-Taught</span>
+      </div>
+      <div class="stat-item animate-fade-up delay-3">
+        <span class="stat-number">自由</span>
+        <span class="stat-label">Independent</span>
+      </div>
+    </div>
   </section>
 </Layout>
 
 <style>
   .about {
     max-width: var(--width-content);
+  }
+
+  /* ─── Hero ─────────────────────────────── */
+  .about-hero {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .about-avatar {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto var(--space-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .avatar-letter {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text);
+    z-index: 1;
+  }
+
+  .avatar-ring {
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid var(--color-border);
+    border-radius: 50%;
+    transition: transform 0.4s ease, border-color 0.4s ease;
+  }
+
+  .about-avatar:hover .avatar-ring {
+    transform: scale(1.08);
+    border-color: var(--color-text-tertiary);
+  }
+
+  .about-subtitle {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-sm);
+  }
+
+  /* ─── Cards ─────────────────────────────── */
+  .about-card {
+    position: relative;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .about-card:nth-of-type(1) { animation-delay: 0.1s; }
+  .about-card:nth-of-type(2) { animation-delay: 0.2s; }
+
+  .about-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  .about-card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+    opacity: 0.4;
+  }
+
+  .about-card .prose p {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .about-email {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    padding: 2px 8px;
+    background: var(--color-accent-subtle);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .about-email:hover {
+    background: var(--color-border);
+    color: var(--color-text);
+  }
+
+  /* ─── Stats ─────────────────────────────── */
+  .about-stats {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: var(--space-md) var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    min-width: 100px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .stat-item:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-text-tertiary);
+  }
+
+  .stat-number {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 2px;
+  }
+
+  .stat-label {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── Dark mode adjustments ─────────────── */
+  @media (prefers-color-scheme: dark) {
+    .about-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .about-email:hover {
+      background: var(--color-border);
+    }
   }
 </style>

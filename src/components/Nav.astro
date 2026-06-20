@@ -5,10 +5,22 @@ const currentPath = Astro.url.pathname;
 <nav class="nav">
   <a href="/" class="nav-brand">部落格</a>
   <div class="nav-links">
-    <a href="/tags" class:list={[{ active: currentPath.startsWith("/tags") }]}>標籤</a>
-    <a href="/search" class:list={[{ active: currentPath === "/search" || currentPath === "/search/" }]}>搜尋</a>
-    <a href="/about" class:list={[{ active: currentPath === "/about" || currentPath === "/about/" }]}>關於</a>
-    <a href="/rss.xml">RSS</a>
+    <a href="/tags" class:list={[{ active: currentPath.startsWith("/tags") }]}>
+      <span class="nav-link-text">標籤</span>
+      <span class="nav-underline"></span>
+    </a>
+    <a href="/search" class:list={[{ active: currentPath === "/search" || currentPath === "/search/" }]}>
+      <span class="nav-link-text">搜尋</span>
+      <span class="nav-underline"></span>
+    </a>
+    <a href="/about" class:list={[{ active: currentPath === "/about" || currentPath === "/about/" }]}>
+      <span class="nav-link-text">關於</span>
+      <span class="nav-underline"></span>
+    </a>
+    <a href="/rss.xml">
+      <span class="nav-link-text">RSS</span>
+      <span class="nav-underline"></span>
+    </a>
   </div>
 </nav>
 
@@ -29,6 +41,7 @@ const currentPath = Astro.url.pathname;
     letter-spacing: -0.01em;
     text-decoration: none;
     color: var(--color-text);
+    transition: color 0.2s ease;
   }
 
   .nav-brand:hover {
@@ -45,10 +58,37 @@ const currentPath = Astro.url.pathname;
     font-size: 0.8125rem;
     color: var(--color-text-secondary);
     text-decoration: none;
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: color 0.2s ease;
   }
 
-  .nav-links a:hover,
+  .nav-links a:hover {
+    color: var(--color-text);
+  }
+
   .nav-links a.active {
     color: var(--color-text);
+  }
+
+  .nav-link-text {
+    position: relative;
+  }
+
+  .nav-underline {
+    display: block;
+    width: 0;
+    height: 1.5px;
+    background: var(--color-text);
+    border-radius: 1px;
+    transition: width 0.25s ease;
+  }
+
+  .nav-links a:hover .nav-underline,
+  .nav-links a.active .nav-underline {
+    width: 100%;
   }
 </style>
