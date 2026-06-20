@@ -14,10 +14,10 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 const { page } = Astro.props;
 ---
 
-<Layout title={`第 ${page.currentPage} 頁 — 部落格`}>
+<Layout title={`第 ${page.currentPage} 頁`}>
   <section class="home">
     <header class="home-header">
-      <Heading as="h1">部落格</Heading>
+      <Heading as="h1"> </Heading>
       <p class="home-tagline">一方靜謐閱讀之地——書寫系統、科技，以及我們周遭的世界。</p>
     </header>
     <ul class="post-list">
