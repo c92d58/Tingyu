@@ -2,6 +2,10 @@
 import Layout from "../components/Layout.astro";
 import Heading from "../components/Heading.astro";
 import Prose from "../components/Prose.astro";
+import crypto from "node:crypto";
+
+const gravatarHash = crypto.createHash("md5").update("x@wahsun.org".trim().toLowerCase()).digest("hex");
+const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`;
 ---
 
 <Layout title="關於 — 部落格" description="關於這個部落格。">
@@ -20,7 +24,7 @@ import Prose from "../components/Prose.astro";
   <section class="about">
     <div class="about-hero">
       <div class="about-avatar">
-        <span class="avatar-letter">W</span>
+        <img class="avatar-img" src={gravatarUrl} alt="WAHSUN" width="72" height="72" />
         <span class="avatar-ring"></span>
       </div>
       <Heading as="h1"> </Heading>
@@ -92,12 +96,13 @@ import Prose from "../components/Prose.astro";
     justify-content: center;
   }
 
-  .avatar-letter {
-    font-family: var(--font-heading);
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--color-text);
+  .avatar-img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
     z-index: 1;
+    display: block;
+    object-fit: cover;
   }
 
   .avatar-ring {
