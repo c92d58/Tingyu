@@ -11,11 +11,11 @@ const posts = allPosts.slice(0, PAGE_SIZE);
 const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
 ---
 
-<Layout title="首頁">
+<Layout title="部落格">
   <script slot="head" type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://blog.wahsun.org",
     "@type": "WebSite",
-    "name": "blog.wahsun.org",
+    "name": "部落格",
     "description": "一方靜謐閱讀之地。",
     "url": Astro.site?.href,
   })} />
