@@ -2,10 +2,6 @@
 import Layout from "../components/Layout.astro";
 import Heading from "../components/Heading.astro";
 import Prose from "../components/Prose.astro";
-import crypto from "node:crypto";
-
-const gravatarHash = crypto.createHash("md5").update("x@wahsun.org".trim().toLowerCase()).digest("hex");
-const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`;
 ---
 
 <Layout title="關於 — 聽雨" description="在雨聲中，讀懂人性的溫度。">
@@ -23,10 +19,10 @@ const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`
   })} />
   <section class="about">
     <div class="about-hero">
-      <div class="about-avatar">
-        <img class="avatar-img" src={gravatarUrl} alt="WAHSUN" width="80" height="80" />
-        <span class="avatar-ring"></span>
-        <span class="avatar-ring-2"></span>
+      <div class="hero-ornament">
+        <span class="ornament-dot"></span>
+        <span class="ornament-line"></span>
+        <span class="ornament-dot"></span>
       </div>
       <Heading as="h1"> </Heading>
       <p class="about-subtitle">聽一場雨，讀一段人間</p>
@@ -39,7 +35,6 @@ const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`
 
     <div class="about-card about-card-intro">
       <div class="card-glow"></div>
-      <div class="card-bg-pattern"></div>
       <div class="card-content">
         <span class="decorative-quote">&ldquo;</span>
         <Prose>
@@ -80,18 +75,20 @@ const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`
       </div>
     </div>
 
-    <div class="about-card about-card-simple">
+    <div class="about-card about-card-contact">
+      <div class="card-glow"></div>
       <div class="card-content">
         <Prose>
-          <p>
-            沒有電子報。沒有彈窗。沒有追蹤。沒有演算法。
+          <div class="contact-header">
+            <span class="contact-icon">&#x2709;</span>
+            <h2>聯繫方式</h2>
+          </div>
+          <p class="contact-text">
+            如果你對某篇文章有想法，或只是想打聲招呼，歡迎寫封信來。
           </p>
-          <p class="about-final-line">
-            只有文字——以及你想從中讀到的任何東西。
-          </p>
-          <p class="about-contact">
-            <a href="mailto:x@wahsun.org" class="about-email">x@wahsun.org</a>
-          </p>
+          <div class="contact-email-wrap">
+            <a href="mailto:x@wahsun.org" class="contact-email">x@wahsun.org</a>
+          </div>
         </Prose>
       </div>
     </div>
@@ -110,57 +107,36 @@ const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`
     animation: fadeUp 0.5s ease both;
   }
 
-  .about-avatar {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto var(--space-lg);
+  .hero-ornament {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+    margin-bottom: var(--space-lg);
   }
 
-  .avatar-img {
-    width: 80px;
-    height: 80px;
+  .ornament-dot {
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    z-index: 2;
-    display: block;
-    object-fit: cover;
-    transition: transform 0.4s ease;
+    background: var(--color-text-tertiary);
+    animation: pulse-dot 2s ease-in-out infinite;
   }
 
-  .about-avatar:hover .avatar-img {
-    transform: scale(1.04);
-  }
+  .ornament-dot:nth-child(1) { animation-delay: 0s; }
+  .ornament-dot:nth-child(3) { animation-delay: 0.6s; }
 
-  .avatar-ring {
-    position: absolute;
-    inset: -4px;
-    border: 1.5px solid var(--color-border);
-    border-radius: 50%;
-    z-index: 1;
-    transition: transform 0.5s ease, border-color 0.5s ease;
-  }
-
-  .avatar-ring-2 {
-    position: absolute;
-    inset: -8px;
-    border: 1px solid var(--color-border);
-    border-radius: 50%;
-    z-index: 0;
-    opacity: 0.3;
-    transition: transform 0.6s ease, opacity 0.4s ease;
-  }
-
-  .about-avatar:hover .avatar-ring {
-    transform: scale(1.06);
-    border-color: var(--color-text-tertiary);
-  }
-
-  .about-avatar:hover .avatar-ring-2 {
-    transform: scale(1.1);
-    opacity: 0.5;
+  .ornament-line {
+    width: 48px;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      var(--color-text-tertiary) 30%,
+      var(--color-text-tertiary) 70%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s ease infinite;
   }
 
   .about-subtitle {
@@ -219,14 +195,7 @@ const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
   }
 
-  .about-card-intro {
-    animation-delay: 0.1s;
-  }
-
-  .about-card-simple {
-    animation-delay: 0.25s;
-    text-align: center;
-  }
+  .about-card-intro { animation-delay: 0.1s; }
 
   .card-glow {
     position: absolute;
@@ -242,15 +211,6 @@ const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`
 
   .about-card:hover .card-glow {
     opacity: 1;
-  }
-
-  .card-bg-pattern {
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(var(--color-border) 0.5px, transparent 0.5px);
-    background-size: 20px 20px;
-    opacity: 0.15;
-    pointer-events: none;
   }
 
   .card-content {
@@ -288,13 +248,6 @@ const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`
 
   .about-card .prose .card-lead + p {
     margin-top: var(--space-md);
-  }
-
-  .about-final-line {
-    font-family: var(--font-heading);
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: var(--color-text);
   }
 
   /* ─── Topics Grid ─────────────────────────── */
@@ -383,27 +336,75 @@ const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`
     line-height: 1.4;
   }
 
-  /* ─── Contact ─────────────────────────────── */
-  .about-contact {
-    margin-top: var(--space-md) !important;
+  /* ─── Contact Card ─────────────────────────── */
+  .about-card-contact {
+    animation-delay: 0.25s;
+    text-align: center;
+    padding: var(--space-xl) var(--space-lg);
+    border-style: dashed;
   }
 
-  .about-email {
+  .about-card-contact:hover {
+    border-style: solid;
+  }
+
+  .contact-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .contact-icon {
+    font-size: 1.5rem;
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .about-card-contact:hover .contact-icon {
+    transform: scale(1.15);
+  }
+
+  .contact-header h2 {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .contact-text {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 360px;
+    margin: 0 auto var(--space-lg) !important;
+  }
+
+  .contact-email-wrap {
+    margin-top: var(--space-md);
+  }
+
+  .contact-email {
     font-family: var(--font-mono);
-    font-size: 0.9rem;
-    padding: 6px 14px;
-    background: var(--color-accent-subtle);
-    border: 1px solid var(--color-border);
+    font-size: 0.95rem;
+    color: var(--color-text);
+    padding: 8px 20px;
+    border: 1.5px solid var(--color-border);
     border-radius: 8px;
     text-decoration: none;
     transition: all 0.25s ease;
     display: inline-block;
+    letter-spacing: 0.02em;
   }
 
-  .about-email:hover {
-    background: var(--color-border);
-    color: var(--color-text);
-    transform: translateY(-1px);
+  .contact-email:hover {
+    border-color: var(--color-text-secondary);
+    background: var(--color-accent-subtle);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   }
 
   /* ─── Dark mode ──────────────────────────── */
@@ -416,15 +417,15 @@ const gravatarUrl = `https://www.gravatar.com/avatar/${gravatarHash}?s=144&d=mp`
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     }
 
-    .card-bg-pattern {
-      opacity: 0.08;
-    }
-
     .about-subtitle {
       background: linear-gradient(135deg, var(--color-text) 40%, var(--color-text-secondary));
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    .contact-email:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
   }
 </style>
