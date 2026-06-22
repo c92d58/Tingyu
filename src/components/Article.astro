@@ -38,11 +38,15 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString("en-US", {
 
 <article class="article">
   <header class="article-header">
+    <div class="article-bread">
+      <a href="/">← 全部文章</a>
+    </div>
     <Heading as="h1">{title}</Heading>
-    <p class="article-meta">
+    <div class="article-meta-bar">
       <time datetime={date.toISOString()}>{formattedDate}</time>
-      {readingTime && <span class="reading-time">· 閱讀時間 {readingTime} 分鐘</span>}
-    </p>
+      {readingTime && <span class="meta-dot">·</span>}
+      {readingTime && <span class="reading-time">閱讀 {readingTime} 分鐘</span>}
+    </div>
     {updatedDate && (
       <p class="article-updated">
         更新於 <time datetime={updatedDate.toISOString()}>{formattedUpdatedDate}</time>
@@ -56,10 +60,21 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString("en-US", {
       </div>
     )}
   </header>
+
+  <!-- Decorative rain line -->
+  <div class="rain-divider" aria-hidden="true">
+    <span class="drop">·</span>
+    <span class="drop">·</span>
+    <span class="drop">·</span>
+    <span class="drop">·</span>
+    <span class="drop">·</span>
+  </div>
+
   <TableOfContents headings={headings} />
   <Prose>
     <slot />
   </Prose>
+
   {(prevPost || nextPost) && (
     <nav class="post-nav" aria-label="Post navigation">
       <div class="post-nav-prev">
@@ -88,10 +103,26 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString("en-US", {
   }
 
   .article-header {
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
   }
 
-  .article-meta {
+  .article-bread {
+    margin-bottom: var(--space-sm);
+  }
+
+  .article-bread a {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .article-bread a:hover {
+    color: var(--color-text);
+  }
+
+  .article-meta-bar {
     font-family: var(--font-heading);
     font-size: 0.8125rem;
     color: var(--color-text-tertiary);
@@ -99,6 +130,10 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString("en-US", {
     display: flex;
     align-items: center;
     gap: var(--space-xs);
+  }
+
+  .meta-dot {
+    color: var(--color-border);
   }
 
   .reading-time {
@@ -127,13 +162,14 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString("en-US", {
     text-decoration: none;
     border: 1px solid var(--color-border);
     padding: 0.125rem 0.5rem;
-    border-radius: 3px;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    border-radius: 4px;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
   }
 
   .tag:hover {
     color: var(--color-text);
     border-color: var(--color-text-tertiary);
+    background: var(--color-ink-light);
   }
 
   .post-nav {
@@ -182,5 +218,18 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString("en-US", {
 
   .post-nav-link:hover .post-nav-title {
     color: var(--color-text);
+  }
+
+  @media (max-width: 600px) {
+    .post-nav {
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .post-nav-next {
+      text-align: left;
+    }
+    .post-nav-link--right {
+      align-items: flex-start;
+    }
   }
 </style>

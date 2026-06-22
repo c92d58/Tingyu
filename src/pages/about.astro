@@ -1,15 +1,17 @@
 ---
 import Layout from "../components/Layout.astro";
 import Heading from "../components/Heading.astro";
-import Prose from "../components/Prose.astro";
 ---
 
-<Layout title="關於 — 聽雨" description="在雨聲中，讀懂人性的溫度。">
+<Layout
+  title="關於 — 聽雨"
+  description="一個人在試圖穿透自己頭腦中的迷霧時，留下的筆記。"
+>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://tinyu.wahsun.org",
     "@type": "AboutPage",
     "name": "關於聽雨",
-    "description": "在雨聲中，讀懂人性的溫度。",
+    "description": "一個人在試圖穿透自己頭腦中的迷霧時，留下的筆記。",
     "url": new URL("/about", Astro.site).href,
     "isPartOf": {
       "@type": "WebSite",
@@ -18,78 +20,71 @@ import Prose from "../components/Prose.astro";
     },
   })} />
   <section class="about">
-    <div class="about-hero">
-      <div class="hero-ornament">
-        <span class="ornament-dot"></span>
-        <span class="ornament-line"></span>
-        <span class="ornament-dot"></span>
+
+    <!-- ─── Hero ─────────────────────────────── -->
+    <header class="about-hero">
+      <div class="hero-rain-line" aria-hidden="true">
+        <span class="drop"></span><span class="drop"></span>
+        <span class="drop"></span><span class="drop"></span>
+        <span class="drop"></span>
       </div>
-      <Heading as="h1"> </Heading>
-      <p class="about-subtitle">聽一場雨，讀一段人間</p>
-      <div class="about-hero-divider">
-        <span class="divider-dot"></span>
-        <span class="divider-line"></span>
-        <span class="divider-dot"></span>
+      <Heading as="h1">
+        <span class="hero-heading-main">關於這個地方</span>
+      </Heading>
+      <p class="hero-subtitle">
+        一個人在試圖穿透自己頭腦中的迷霧時，留下的筆記。
+      </p>
+    </header>
+
+    <!-- ─── Manifesto ─────────────────────────── -->
+    <div class="about-card manifesto">
+      <div class="manifesto-content">
+
+        <p class="manifesto-lead">
+          人類最大的錯覺，是以為「一無所知」會讓人感到膽怯。一無所知只會讓人無所畏懼。
+        </p>
+
+        <p>
+          這個網站存在的理由，就是跟自己過不去。它不是為了說服誰，也不是為了傳遞某種「真理」——恰恰相反，它始於一個簡單的懷疑：<strong>「我以為我知道的東西，有多少是真的？」</strong>
+        </p>
+
+        <p>
+          於是你會在這裡看到以下幾種嘗試：用自己的語言重新描述心理學的經典實驗，看看它們在當代生活裡是否仍然成立；拆解那些習以為常的社會現象——演算法餵養的資訊繭房、體制內的雙重思想、群體壓力下的集體沉默——把它們翻過來，看看背面寫著什麼；以及，最難的，試著直面自己那張戴了太久的面具。
+        </p>
+
+        <p>
+          這裡寫的不是學術論文。不需要參考文獻，不需要客觀中立。它更像一個人在雨夜裡自言自語——有時候邏輯清晰，有時候語無倫次，有時候說到一半停下來，發現自己也說不清楚。那也無妨。說不清楚，本來就是開始思考的真實狀態。
+        </p>
+
+        <div class="manifesto-quote">
+          <span class="quote-mark">「</span>
+          <span class="quote-text">當渾濁成為一種常態，清白就成了一種罪。</span>
+          <span class="quote-attribution">—— 來自某一篇文章</span>
+        </div>
+
+        <p class="manifesto-sign">
+          總之，這裡沒有課程，沒有捷徑，沒有「X 天學會 Y」。只有一個人在試圖理解自己是怎麼被塑造成現在這個樣子的，以及他還能成為什麼。
+        </p>
+
       </div>
     </div>
 
-    <div class="about-card about-card-intro">
-      <div class="card-glow"></div>
-      <div class="card-content">
-        <span class="decorative-quote">&ldquo;</span>
-        <Prose>
-          <p class="card-lead">
-            雨聲裡，思緒會變得格外清晰。
-          </p>
-          <p>
-            這裡不談技術，不寫教學——只談那些真正困擾人的：情感的真偽、認知的盲區、社會運作的潛規則。從米爾格倫的電擊實驗到日常生活中的自我欺騙，從群體壓力下的服從到面對真相時的戰慄，每一篇文章都是在雨聲中對人性某個側面的凝視。
-          </p>
-          <p>
-            不是學術論文，只是一個在雨夜裡持續思考的人留下的筆記。
-          </p>
-        </Prose>
-      </div>
+    <!-- ─── Rain divider ─────────────────────── -->
+    <div class="rain-divider" aria-hidden="true">
+      <span class="drop">·</span><span class="drop">·</span>
+      <span class="drop">·</span><span class="drop">·</span>
+      <span class="drop">·</span>
     </div>
 
-    <div class="about-topics">
-      <div class="topic-item topic-emotion">
-        <span class="topic-icon">&#x2767;</span>
-        <span class="topic-label">情感</span>
-        <span class="topic-en">Emotion</span>
-        <div class="topic-bar"></div>
-        <span class="topic-desc">關係、依附、失落與愛</span>
-      </div>
-      <div class="topic-item topic-cognition">
-        <span class="topic-icon">&#x25B4;</span>
-        <span class="topic-label">認知</span>
-        <span class="topic-en">Cognition</span>
-        <div class="topic-bar"></div>
-        <span class="topic-desc">偏誤、框架、覺醒與重啟</span>
-      </div>
-      <div class="topic-item topic-society">
-        <span class="topic-icon">&#x2234;</span>
-        <span class="topic-label">社會</span>
-        <span class="topic-en">Society</span>
-        <div class="topic-bar"></div>
-        <span class="topic-desc">權力、服從、群體與反抗</span>
-      </div>
-    </div>
-
-    <div class="about-card about-card-contact">
-      <div class="card-glow"></div>
-      <div class="card-content">
-        <Prose>
-          <div class="contact-header">
-            <span class="contact-icon">&#x2709;</span>
-            <h2>聯繫方式</h2>
-          </div>
-          <p class="contact-text">
-            如果你對某篇文章有想法，或只是想打聲招呼，歡迎寫封信來。
-          </p>
-          <div class="contact-email-wrap">
-            <a href="mailto:x@wahsun.org" class="contact-email">x@wahsun.org</a>
-          </div>
-        </Prose>
+    <!-- ─── Contact ──────────────────────────── -->
+    <div class="about-card contact-card">
+      <div class="contact-inner">
+        <p class="contact-prompt">
+          如果你讀了某篇文章後有話想說——不同意、想補充，或者只是也想聊聊你在雨夜裡想到的事——
+        </p>
+        <a href="mailto:x@wahsun.org" class="contact-email">
+          <span class="contact-icon">✧</span>x@wahsun.org
+        </a>
       </div>
     </div>
   </section>
@@ -100,332 +95,363 @@ import Prose from "../components/Prose.astro";
     max-width: var(--width-content);
   }
 
-  /* ─── Hero ─────────────────────────────── */
+  /* ─── Hero ──────────────────────────────── */
   .about-hero {
     text-align: center;
     margin-bottom: var(--space-xl);
     animation: fadeUp 0.5s ease both;
   }
 
-  .hero-ornament {
+  .hero-rain-line {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 5px;
     margin-bottom: var(--space-lg);
+    opacity: 0.2;
   }
-
-  .ornament-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
+  .hero-rain-line .drop {
+    display: block;
+    width: 2px;
+    height: 18px;
     background: var(--color-text-tertiary);
-    animation: pulse-dot 2s ease-in-out infinite;
+    border-radius: 1px;
+    animation: hero-drop 1.8s ease-in-out infinite;
+  }
+  .hero-rain-line .drop:nth-child(2) { animation-delay: 0.3s; height: 14px; }
+  .hero-rain-line .drop:nth-child(3) { animation-delay: 0.6s; height: 22px; }
+  .hero-rain-line .drop:nth-child(4) { animation-delay: 0.9s; height: 16px; }
+  .hero-rain-line .drop:nth-child(5) { animation-delay: 1.2s; height: 12px; }
+
+  @keyframes hero-drop {
+    0%, 100% { opacity: 0.15; transform: translateY(0); }
+    50% { opacity: 0.6; transform: translateY(6px); }
   }
 
-  .ornament-dot:nth-child(1) { animation-delay: 0s; }
-  .ornament-dot:nth-child(3) { animation-delay: 0.6s; }
-
-  .ornament-line {
-    width: 48px;
-    height: 1px;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      var(--color-text-tertiary) 30%,
-      var(--color-text-tertiary) 70%,
-      transparent 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 3s ease infinite;
+  .hero-heading-main {
+    display: inline-block;
+    position: relative;
+  }
+  .hero-heading-main::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 15%;
+    right: 15%;
+    height: 2px;
+    background: var(--color-accent);
+    opacity: 0.3;
+    border-radius: 1px;
   }
 
-  .about-subtitle {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--color-text);
-    margin-top: var(--space-sm);
-    background: linear-gradient(135deg, var(--color-text) 40%, var(--color-text-secondary));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .hero-subtitle {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-lg);
+    font-style: italic;
+    line-height: 1.6;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
     animation: fadeIn 0.6s ease 0.15s both;
   }
 
-  .about-hero-divider {
+  /* ─── Stats Bar ─────────────────────────── */
+  .stats-bar {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-top: var(--space-md);
-    opacity: 0.5;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-lg) var(--space-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    margin-bottom: var(--space-lg);
+    animation: fadeUp 0.5s ease 0.1s both;
   }
 
-  .divider-dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--color-text-tertiary);
+  .stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .stat-num {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.03em;
   }
-
-  .divider-line {
-    width: 40px;
-    height: 1px;
-    background: var(--color-text-tertiary);
-    animation: shimmer 3s ease infinite;
-    background-size: 200% 100%;
+  .stat-label {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
+  .stat-sep { width: 1px; height: 36px; background: var(--color-border); }
 
-  /* ─── Cards ─────────────────────────────── */
+  /* ─── Manifesto Card ────────────────────── */
   .about-card {
-    position: relative;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 14px;
-    padding: var(--space-lg);
+    padding: var(--space-xl) var(--space-lg);
     margin-bottom: var(--space-lg);
-    overflow: hidden;
-    animation: fadeUp 0.5s ease both;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.35s ease, box-shadow 0.35s ease;
   }
-
   .about-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 1px var(--color-ink-light), 0 8px 30px var(--color-ink-medium);
   }
 
-  .about-card-intro { animation-delay: 0.1s; }
+  .manifesto { animation: fadeUp 0.5s ease 0.15s both; }
 
-  .card-glow {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at 30% 20%, var(--color-accent-subtle) 0%, transparent 60%);
-    opacity: 0;
-    transition: opacity 0.6s ease;
-    pointer-events: none;
+  .manifesto-content p {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.95;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.3em;
   }
 
-  .about-card:hover .card-glow {
-    opacity: 1;
-  }
+  .manifesto-content strong { color: var(--color-text); font-weight: 600; }
 
-  .card-content {
-    position: relative;
-    z-index: 1;
-  }
-
-  .decorative-quote {
-    font-family: var(--font-heading);
-    font-size: 4rem;
-    line-height: 0.8;
-    color: var(--color-border);
-    display: block;
-    margin-bottom: var(--space-sm);
-    user-select: none;
-    transition: color 0.3s ease;
-  }
-
-  .about-card-intro:hover .decorative-quote {
-    color: var(--color-text-tertiary);
-  }
-
-  .card-lead {
+  .manifesto-lead {
     font-family: var(--font-heading);
     font-size: 1.05rem;
     font-weight: 500;
-    color: var(--color-text);
-    margin-bottom: var(--space-md) !important;
+    color: var(--color-text) !important;
+    line-height: 1.6;
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .about-card .prose p {
-    font-size: 1rem;
-    line-height: 1.9;
-  }
-
-  .about-card .prose .card-lead + p {
-    margin-top: var(--space-md);
-  }
-
-  /* ─── Topics Grid ─────────────────────────── */
-  .about-topics {
+  .manifesto-quote {
     display: flex;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
-    flex-wrap: wrap;
-    animation: fadeUp 0.5s ease 0.18s both;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin: var(--space-lg) 0;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-ink-light);
+    border-radius: 8px;
+    border-left: 2px solid var(--color-accent);
   }
 
-  .topic-item {
-    flex: 1;
-    min-width: 120px;
-    text-align: center;
-    padding: var(--space-lg) var(--space-md);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    cursor: default;
-  }
-
-  .topic-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-  }
-
-  .topic-emotion { animation-delay: 0.15s; }
-  .topic-emotion:hover { border-color: #c08497; }
-  .topic-cognition { animation-delay: 0.2s; }
-  .topic-cognition:hover { border-color: #7eb8da; }
-  .topic-society { animation-delay: 0.25s; }
-  .topic-society:hover { border-color: #7fc6a4; }
-
-  .topic-icon {
-    display: block;
-    font-size: 1.5rem;
-    margin-bottom: var(--space-sm);
-    color: var(--color-text-tertiary);
-    transition: transform 0.3s ease;
-  }
-
-  .topic-item:hover .topic-icon {
-    transform: scale(1.2);
-  }
-
-  .topic-label {
-    display: block;
+  .quote-mark {
     font-family: var(--font-heading);
-    font-size: 1rem;
+    font-size: 2.5rem;
+    line-height: 0.6;
+    color: var(--color-accent);
+    opacity: 0.3;
+  }
+
+  .quote-text {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  .quote-attribution {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.03em;
+  }
+
+  .manifesto-sign {
+    font-style: italic;
+    color: var(--color-text-tertiary) !important;
+    margin-top: var(--space-lg) !important;
+    padding-top: var(--space-md);
+    position: relative;
+  }
+  .manifesto-sign::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  /* ─── Knowledge Landscape ────────────────── */
+  .landscape-header { margin-bottom: var(--space-lg); animation: fadeUp 0.5s ease 0.2s both; }
+  .landscape-title {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
     font-weight: 600;
     color: var(--color-text);
-    margin-bottom: 2px;
+    margin-bottom: var(--space-xs);
   }
-
-  .topic-en {
-    display: block;
-    font-family: var(--font-heading);
-    font-size: 0.65rem;
+  .landscape-sub {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
     color: var(--color-text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: var(--space-sm);
+    font-style: italic;
   }
 
-  .topic-bar {
-    display: block;
-    width: 24px;
-    height: 2px;
-    margin: 0 auto var(--space-sm);
-    border-radius: 1px;
-    background: var(--color-border);
-    transition: width 0.3s ease, background 0.3s ease;
-  }
-
-  .topic-emotion:hover .topic-bar { width: 40px; background: #c08497; }
-  .topic-cognition:hover .topic-bar { width: 40px; background: #7eb8da; }
-  .topic-society:hover .topic-bar { width: 40px; background: #7fc6a4; }
-
-  .topic-desc {
-    display: block;
-    font-size: 0.75rem;
-    color: var(--color-text-tertiary);
-    line-height: 1.4;
-  }
-
-  /* ─── Contact Card ─────────────────────────── */
-  .about-card-contact {
-    animation-delay: 0.25s;
-    text-align: center;
-    padding: var(--space-xl) var(--space-lg);
-    border-style: dashed;
-  }
-
-  .about-card-contact:hover {
-    border-style: solid;
-  }
-
-  .contact-header {
+  /* ─── Tag Groups ─────────────────────────── */
+  .tag-groups {
     display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+    animation: fadeUp 0.5s ease 0.25s both;
+  }
+
+  .tag-group {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: var(--space-lg);
+    transition: border-color 0.3s ease;
+  }
+  .tag-group:hover { border-color: var(--color-accent); }
+
+  .group-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    gap: var(--space-sm);
     margin-bottom: var(--space-md);
   }
 
-  .contact-icon {
-    font-size: 1.5rem;
-    display: inline-block;
+  .group-name-wrap { display: flex; align-items: center; gap: var(--space-sm); }
+  .group-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
     transition: transform 0.3s ease;
   }
+  .tag-group:hover .group-dot { transform: scale(1.3); }
 
-  .about-card-contact:hover .contact-icon {
-    transform: scale(1.15);
-  }
-
-  .contact-header h2 {
+  .group-name {
     font-family: var(--font-heading);
-    font-size: 1rem;
+    font-size: 0.9375rem;
     font-weight: 600;
     color: var(--color-text);
-    margin: 0;
+  }
+  .group-en {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.04em;
+  }
+  .group-count {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    font-variant-numeric: tabular-nums;
   }
 
-  .contact-text {
+  .group-tags { display: flex; flex-direction: column; gap: 4px; }
+
+  .group-tag {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    position: relative;
+    padding: 5px 0;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+  }
+  .group-tag:hover { background: var(--color-ink-light); }
+
+  .tag-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: var(--tag-color);
+    opacity: 0.06;
+    border-radius: 4px;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .group-tag:hover .tag-bar { opacity: 0.12; }
+
+  .tag-name {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    transition: color 0.2s ease;
+  }
+  .group-tag:hover .tag-name { color: var(--color-text); }
+
+  .tag-count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    position: relative;
+    z-index: 1;
+    min-width: 1.5em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ─── Contact Card ───────────────────────── */
+  .contact-card {
+    text-align: center;
+    padding: var(--space-2xl) var(--space-lg);
+    border-style: dashed;
+    animation: fadeUp 0.5s ease 0.3s both;
+  }
+  .contact-card:hover { border-style: solid; }
+
+  .contact-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+
+  .contact-prompt {
     font-family: var(--font-body);
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
-    line-height: 1.6;
-    max-width: 360px;
-    margin: 0 auto var(--space-lg) !important;
-  }
-
-  .contact-email-wrap {
-    margin-top: var(--space-md);
+    font-style: italic;
+    line-height: 1.7;
+    max-width: 400px;
   }
 
   .contact-email {
     font-family: var(--font-mono);
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--color-text);
-    padding: 8px 20px;
+    padding: 10px 24px;
     border: 1.5px solid var(--color-border);
     border-radius: 8px;
     text-decoration: none;
     transition: all 0.25s ease;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
     letter-spacing: 0.02em;
   }
-
   .contact-email:hover {
-    border-color: var(--color-text-secondary);
+    border-color: var(--color-accent);
     background: var(--color-accent-subtle);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 0 0 1px var(--color-ink-light), 0 4px 16px var(--color-ink-medium);
   }
+  .contact-icon {
+    font-size: 1rem;
+    opacity: 0.5;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .contact-email:hover .contact-icon { opacity: 0.8; transform: scale(1.2); }
 
-  /* ─── Dark mode ──────────────────────────── */
-  @media (prefers-color-scheme: dark) {
-    .about-card:hover {
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-    }
-
-    .topic-item:hover {
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    .about-subtitle {
-      background: linear-gradient(135deg, var(--color-text) 40%, var(--color-text-secondary));
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .contact-email:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
+  /* ─── Responsive ─────────────────────────── */
+  @media (max-width: 600px) {
+    .stats-bar { flex-wrap: wrap; gap: var(--space-md); padding: var(--space-md); }
+    .stat-num { font-size: 1.25rem; }
+    .stat-sep:nth-child(6) { display: none; }
+    .tag-group { padding: var(--space-md); }
+    .group-en { display: none; }
+    .tag-name { font-size: 0.8125rem; }
+    .about-card { padding: var(--space-lg) var(--space-md); }
+    .manifesto-quote { padding: var(--space-sm) var(--space-md); }
+    .quote-mark { font-size: 2rem; }
   }
 </style>

@@ -7,7 +7,6 @@ import type { GetStaticPathsOptions } from "astro";
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const posts = await getPublishedPosts();
   const pages = paginate(posts, { pageSize: 10 });
-  // Skip page 1 — home page (index.astro) handles it
   return pages.filter((p) => p.params.page !== '1');
 }
 
@@ -16,10 +15,22 @@ const { page } = Astro.props;
 
 <Layout title={`第 ${page.currentPage} 頁 — 聽雨`}>
   <section class="home">
-    <header class="home-header">
-      <Heading as="h1"> </Heading>
-      <p class="home-tagline">雨落無聲，字字入心——聽一場雨，讀一段人間。</p>
+    <header class="page-header">
+      <Heading as="h1">
+        文章
+        <span class="page-sub">· 第 {page.currentPage} 頁</span>
+      </Heading>
+      <p class="page-tagline">共 {page.lastPage} 頁 · 持續書寫中</p>
     </header>
+
+    <div class="rain-divider" aria-hidden="true">
+      <span class="drop">·</span>
+      <span class="drop">·</span>
+      <span class="drop">·</span>
+      <span class="drop">·</span>
+      <span class="drop">·</span>
+    </div>
+
     <ul class="post-list">
       {page.data.map((post, index) => {
         const formattedDate = post.data.date.toLocaleDateString("en-US", {
@@ -28,23 +39,33 @@ const { page } = Astro.props;
           day: "numeric",
         });
         return (
-          <li class="post-item animate-fade-up delay-{Math.min(index + 1, 6)}" data-index={page.start + index + 1}>
+          <li class="post-item ink-border animate-fade-up delay-{Math.min(index + 1, 6)}" data-index={page.start + index + 1}>
             <a href={`/posts/${post.id}`}>
+              <span class="post-meta">
+                <span class="post-number">#{(page.start + index + 1).toString().padStart(2, '0')}</span>
+                <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+              </span>
               <span class="post-title">{post.data.title}</span>
               <span class="post-description">{post.data.description}</span>
-              <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
             </a>
           </li>
         );
       })}
     </ul>
+
     <nav class="pagination" aria-label="Pagination">
       {page.url.prev && (
-        <a href={page.currentPage === 2 ? "/" : page.url.prev} class="pagination-link">&larr; 較新文章</a>
+        <a href={page.currentPage === 2 ? "/" : page.url.prev} class="pagination-link">
+          <span class="pagination-arrow">←</span>
+          較新文章
+        </a>
       )}
       <span class="pagination-info">第 {page.currentPage} 頁，共 {page.lastPage} 頁</span>
       {page.url.next && (
-        <a href={page.url.next} class="pagination-link">較舊文章 &rarr;</a>
+        <a href={page.url.next} class="pagination-link">
+          較舊文章
+          <span class="pagination-arrow">→</span>
+        </a>
       )}
     </nav>
   </section>
@@ -55,105 +76,76 @@ const { page } = Astro.props;
     max-width: var(--width-content);
   }
 
-  .home-header {
-    margin-bottom: var(--space-2xl);
+  .page-header {
+    margin-bottom: var(--space-lg);
   }
 
-  .home-tagline {
+  .page-sub {
+    font-weight: 400;
+    font-size: 0.8em;
+    color: var(--color-text-tertiary);
+  }
+
+  .page-tagline {
     font-family: var(--font-body);
-    font-size: 1rem;
-    color: var(--color-text-secondary);
-    margin-top: var(--space-sm);
-    line-height: 1.6;
-    max-width: 520px;
-    animation: fadeIn 0.8s ease 0.2s both;
+    font-size: 0.875rem;
+    color: var(--color-text-tertiary);
+    margin-top: var(--space-xs);
+    font-style: italic;
   }
 
   /* ─── Post List ──────────────────────────── */
   .post-list {
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
   }
 
   /* ─── Post Item ──────────────────────────── */
   .post-item {
-    position: relative;
-    border-bottom: 1px solid var(--color-border);
-    transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
-    border-radius: 6px;
-    margin: 0 calc(-1 * var(--space-md));
-    padding: 0 var(--space-md);
-    padding-left: calc(var(--space-md) + 10px);
-    overflow: hidden;
-  }
-
-  .post-item:first-child {
-    border-top: 1px solid var(--color-border);
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.3s ease;
   }
 
   .post-item:hover {
-    background: var(--color-accent-subtle);
-    transform: translateX(4px);
-    border-color: var(--color-text-tertiary);
+    border-color: var(--color-accent);
+    box-shadow:
+      0 0 0 1px var(--color-ink-light),
+      0 4px 20px var(--color-ink-medium);
+    transform: translateY(-2px);
   }
 
-  /* ─── Left Accent Bar ──────────────────── */
-  .post-item::before {
-    content: '';
-    position: absolute;
-    left: var(--space-md);
-    top: 0.5rem;
-    bottom: 0.5rem;
-    width: 2px;
-    background: var(--color-border);
-    border-radius: 1px;
-    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .post-item:hover::before {
-    background: var(--color-text);
-    transform: scaleY(1.15);
-    box-shadow: 0 0 6px rgba(0,0,0,0.08);
-  }
-
-  /* ─── Decorative Post Number ───────────── */
-  .post-item::after {
-    content: attr(data-index);
-    position: absolute;
-    right: var(--space-md);
-    top: 50%;
-    transform: translateY(-50%);
-    font-family: var(--font-heading);
-    font-size: 2.25rem;
-    font-weight: 200;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--color-border);
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
-    transition: color 0.3s ease, -webkit-text-stroke-color 0.3s ease, transform 0.3s ease;
-  }
-
-  .post-item:hover::after {
-    -webkit-text-stroke-color: var(--color-accent);
-    transform: translateY(-50%) scale(1.08) translateX(-2px);
-  }
-
-  /* ─── Post Link ────────────────────────── */
   .post-item a {
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
-    padding-top: var(--space-lg);
-    padding-bottom: var(--space-lg);
     text-decoration: none;
     color: var(--color-text);
-    position: relative;
-    z-index: 1;
   }
 
-  .post-item a:hover .post-title {
-    color: var(--color-text-secondary);
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .post-number {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--color-accent);
+    letter-spacing: 0.02em;
+  }
+
+  .post-item time {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
   }
 
   .post-title {
@@ -165,37 +157,15 @@ const { page } = Astro.props;
     transition: color 0.2s ease;
   }
 
+  .post-item a:hover .post-title {
+    color: var(--color-text-secondary);
+  }
+
   .post-description {
     font-family: var(--font-body);
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
     line-height: 1.5;
-  }
-
-  /* ─── Date with Dot Decorator ──────────── */
-  .post-item time {
-    font-family: var(--font-heading);
-    font-size: 0.75rem;
-    color: var(--color-text-tertiary);
-    margin-top: var(--space-xs);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .post-item time::before {
-    content: '';
-    display: inline-block;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--color-border);
-    transition: background 0.3s ease, transform 0.3s ease;
-  }
-
-  .post-item:hover time::before {
-    background: var(--color-text-tertiary);
-    animation: pulse-dot 1.5s ease-in-out infinite;
   }
 
   /* ─── Pagination ────────────────────────── */
@@ -223,18 +193,24 @@ const { page } = Astro.props;
     font-size: 0.8125rem;
     color: var(--color-text-secondary);
     text-decoration: none;
-    transition: color 0.2s ease, transform 0.2s ease;
+    transition: color 0.2s ease;
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--space-xs);
   }
 
   .pagination-link:hover {
     color: var(--color-text);
-    transform: translateX(2px);
   }
 
-  .pagination-link:first-child:hover {
+  .pagination-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .pagination-link:hover .pagination-arrow {
+    transform: translateX(2px);
+  }
+  .pagination-link:first-child:hover .pagination-arrow {
     transform: translateX(-2px);
   }
 
@@ -242,5 +218,9 @@ const { page } = Astro.props;
     font-family: var(--font-heading);
     font-size: 0.75rem;
     color: var(--color-text-tertiary);
+  }
+
+  @media (max-width: 600px) {
+    .post-item { padding: var(--space-md); }
   }
 </style>

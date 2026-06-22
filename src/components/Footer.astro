@@ -3,19 +3,80 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <p>&copy; {year} 聽雨. 版權所有。</p>
+  <div class="footer-rain" aria-hidden="true">
+    <span>·</span><span>·</span><span>·</span><span>·</span><span>·</span>
+  </div>
+  <div class="footer-inner">
+    <p class="footer-copy">&copy; {year} 聽雨</p>
+  </div>
 </footer>
 
 <style>
   .footer {
-    margin-top: var(--space-2xl);
-    padding: var(--space-lg) 0;
-    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-3xl);
+    padding: var(--space-xl) 0 var(--space-lg);
+    position: relative;
+    text-align: center;
   }
 
-  .footer p {
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    right: 25%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+  }
+
+  .footer-rain {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.5rem;
+    color: var(--color-text-tertiary);
+    opacity: 0.3;
+    letter-spacing: 4px;
+    margin-bottom: var(--space-md);
+    animation: footer-drip 3s ease-in-out infinite;
+  }
+
+  .footer-rain span {
+    animation: footer-drop 2s ease-in-out infinite;
+  }
+  .footer-rain span:nth-child(2) { animation-delay: 0.3s; }
+  .footer-rain span:nth-child(3) { animation-delay: 0.6s; }
+  .footer-rain span:nth-child(4) { animation-delay: 0.9s; }
+  .footer-rain span:nth-child(5) { animation-delay: 1.2s; }
+
+  @keyframes footer-drop {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.8; }
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    align-items: center;
+  }
+
+  .footer-copy {
     font-family: var(--font-heading);
     font-size: 0.75rem;
     color: var(--color-text-tertiary);
+    letter-spacing: 0.02em;
+  }
+
+  .footer-tagline {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    color: var(--color-text-tertiary);
+    font-style: italic;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 600px) {
+    .footer { margin-top: var(--space-2xl); padding: var(--space-lg) 0; }
   }
 </style>

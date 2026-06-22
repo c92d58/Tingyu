@@ -9,6 +9,10 @@ const allPosts = await getPublishedPosts();
 
 const posts = allPosts.slice(0, PAGE_SIZE);
 const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
+
+// Latest post for featured section
+const featured = allPosts[0];
+const restPosts = allPosts.slice(1, PAGE_SIZE);
 ---
 
 <Layout title="聽雨">
@@ -20,34 +24,86 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
     "url": Astro.site?.href,
   })} />
   <section class="home">
-    <header class="home-header">
-      <Heading as="h1"> </Heading>
-      <p class="home-tagline">雨落無聲，字字入心——聽一場雨，讀一段人間。</p>
-    </header>
+
+    <!-- ─── Hero ─────────────────────────────── -->
+    <div class="hero" aria-hidden="true">
+      <div class="hero-image-wrap">
+        <img src="/images/hero-rain.jpg" alt="" class="hero-image" width="1920" height="1200" loading="eager" decoding="async" />
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">✧ 隨筆 · 反思 · 人文</div>
+        <h1 class="hero-title">
+          <span class="hero-title-char">聽</span>
+          <span class="hero-title-char">雨</span>
+        </h1>
+        <p class="hero-sub">Tīng Yǔ —— 在雨聲中，讀懂人性的溫度</p>
+        <div class="hero-drops" aria-hidden="true">
+          <span>°</span><span>º</span><span>°</span><span>º</span><span>°</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Featured Post ─────────────────────── -->
+    {featured && (
+      <article class="featured ink-border">
+        <a href={`/posts/${featured.id}`} class="featured-link">
+          <span class="featured-label">最新文章</span>
+          <h2 class="featured-title">{featured.data.title}</h2>
+          <p class="featured-desc">{featured.data.description}</p>
+          <time class="featured-date" datetime={featured.data.date.toISOString()}>
+            {featured.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+          </time>
+        </a>
+      </article>
+    )}
+
+    <!-- ─── Rain Divider ──────────────────────── -->
+    <div class="rain-divider" aria-hidden="true">
+      <span class="drop">·</span>
+      <span class="drop">·</span>
+      <span class="drop">·</span>
+      <span class="drop">·</span>
+      <span class="drop">·</span>
+    </div>
+
+    <!-- ─── All Posts ─────────────────────────── -->
+    <div class="section-label-wrap">
+      <span class="section-label">所有文章</span>
+      <span class="section-line"></span>
+    </div>
+
     <ul class="post-list">
       {
-        posts.map((post, i) => {
+        restPosts.map((post, i) => {
           const formattedDate = post.data.date.toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
           });
           return (
-            <li class="post-item animate-fade-up delay-{Math.min(i + 1, 6)}" data-index={i + 1}>
+            <li class="post-item ink-border animate-fade-up delay-{Math.min(i + 1, 6)}" data-index={i + 2}>
               <a href={`/posts/${post.id}`}>
+                <span class="post-meta">
+                  <span class="post-number">#{(i + 2).toString().padStart(2, '0')}</span>
+                  <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+                </span>
                 <span class="post-title">{post.data.title}</span>
                 <span class="post-description">{post.data.description}</span>
-                <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
               </a>
             </li>
           );
         })
       }
     </ul>
+
     {totalPages > 1 && (
       <nav class="pagination" aria-label="Pagination">
         <span class="pagination-info">第 1 頁，共 {totalPages} 頁</span>
-        <a href="/page/2" class="pagination-link">較舊文章 &rarr;</a>
+        <a href="/page/2" class="pagination-link">
+          較舊文章
+          <span class="pagination-arrow">→</span>
+        </a>
       </nav>
     )}
   </section>
@@ -58,105 +114,283 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
     max-width: var(--width-content);
   }
 
-  .home-header {
+  /* ─── Hero ──────────────────────────────── */
+  .hero {
+    position: relative;
+    width: calc(100% + ((var(--width-wide) - var(--width-content)) / 2) * 2);
+    max-width: none;
+    margin-left: calc(-1 * ((var(--width-wide) - var(--width-content)) / 2));
+    height: 380px;
+    border-radius: 20px;
+    overflow: hidden;
     margin-bottom: var(--space-2xl);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
   }
 
-  .home-tagline {
+  @media (min-width: 821px) {
+    .hero {
+      width: calc(100% + ((100vw - var(--width-wide)) / 2) * 2);
+      margin-left: calc(-1 * ((100vw - var(--width-wide)) / 2));
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+  }
+
+  .hero-image-wrap {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.8s ease;
+  }
+
+  .hero:hover .hero-image {
+    transform: scale(1.04);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(18, 16, 20, 0.55) 0%,
+      rgba(18, 16, 20, 0.30) 50%,
+      rgba(18, 16, 20, 0.70) 100%
+    );
+    z-index: 1;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .hero-overlay {
+      background: linear-gradient(
+        135deg,
+        rgba(44, 42, 38, 0.45) 0%,
+        rgba(44, 42, 38, 0.15) 50%,
+        rgba(44, 42, 38, 0.55) 100%
+      );
+    }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-xl);
+  }
+
+  .hero-badge {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    margin-bottom: var(--space-md);
+  }
+
+  .hero-title {
+    display: flex;
+    gap: 0.15em;
+    margin-bottom: var(--space-sm);
+  }
+
+  .hero-title-char {
+    font-family: "Noto Serif SC", var(--font-display), serif;
+    font-size: 5rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    animation: hero-char-in 1s ease both;
+  }
+
+  .hero-title-char:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  @keyframes hero-char-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-sub {
     font-family: var(--font-body);
-    font-size: 1rem;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+    letter-spacing: 0.04em;
+    max-width: 400px;
+  }
+
+  .hero-drops {
+    display: flex;
+    gap: 4px;
+    margin-top: var(--space-lg);
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.25);
+    animation: hero-drip 2s ease-in-out infinite;
+  }
+  .hero-drops span {
+    animation: hero-bounce 2.2s ease-in-out infinite;
+  }
+  .hero-drops span:nth-child(2) { animation-delay: 0.3s; }
+  .hero-drops span:nth-child(3) { animation-delay: 0.6s; }
+  .hero-drops span:nth-child(4) { animation-delay: 0.9s; }
+  .hero-drops span:nth-child(5) { animation-delay: 1.2s; }
+
+  @keyframes hero-bounce {
+    0%, 100% { transform: translateY(0); opacity: 0.2; }
+    50% { transform: translateY(-5px); opacity: 0.6; }
+  }
+
+  /* ─── Featured Post ──────────────────────── */
+  .featured {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.3s ease;
+    background: var(--color-surface);
+  }
+
+  .featured:hover {
+    border-color: var(--color-accent);
+    box-shadow:
+      0 0 0 1px var(--color-ink-light),
+      0 8px 30px var(--color-ink-medium);
+    transform: translateY(-3px);
+  }
+
+  .featured-link {
+    text-decoration: none;
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .featured-label {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .featured-title {
+    font-family: var(--font-heading);
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    color: var(--color-text);
+    transition: color 0.2s ease;
+  }
+
+  .featured:hover .featured-title {
     color: var(--color-text-secondary);
-    margin-top: var(--space-sm);
+  }
+
+  .featured-desc {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
     line-height: 1.6;
-    max-width: 520px;
-    animation: fadeIn 0.8s ease 0.2s both;
+  }
+
+  .featured-date {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+  }
+
+  /* ─── Section Label ──────────────────────── */
+  .section-label-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .section-label {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-border), transparent);
   }
 
   /* ─── Post List ──────────────────────────── */
   .post-list {
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
   }
 
   /* ─── Post Item ──────────────────────────── */
   .post-item {
-    position: relative;
-    border-bottom: 1px solid var(--color-border);
-    transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
-    border-radius: 6px;
-    margin: 0 calc(-1 * var(--space-md));
-    padding: 0 var(--space-md);
-    padding-left: calc(var(--space-md) + 10px);
-    overflow: hidden;
-  }
-
-  .post-item:first-child {
-    border-top: 1px solid var(--color-border);
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.3s ease;
   }
 
   .post-item:hover {
-    background: var(--color-accent-subtle);
-    transform: translateX(4px);
-    border-color: var(--color-text-tertiary);
+    border-color: var(--color-accent);
+    box-shadow:
+      0 0 0 1px var(--color-ink-light),
+      0 4px 20px var(--color-ink-medium);
+    transform: translateY(-2px);
   }
 
-  /* ─── Left Accent Bar ──────────────────── */
-  .post-item::before {
-    content: '';
-    position: absolute;
-    left: var(--space-md);
-    top: 0.5rem;
-    bottom: 0.5rem;
-    width: 2px;
-    background: var(--color-border);
-    border-radius: 1px;
-    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .post-item:hover::before {
-    background: var(--color-text);
-    transform: scaleY(1.15);
-    box-shadow: 0 0 6px rgba(0,0,0,0.08);
-  }
-
-  /* ─── Decorative Post Number ───────────── */
-  .post-item::after {
-    content: attr(data-index);
-    position: absolute;
-    right: var(--space-md);
-    top: 50%;
-    transform: translateY(-50%);
-    font-family: var(--font-heading);
-    font-size: 2.25rem;
-    font-weight: 200;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--color-border);
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
-    transition: color 0.3s ease, -webkit-text-stroke-color 0.3s ease, transform 0.3s ease;
-  }
-
-  .post-item:hover::after {
-    -webkit-text-stroke-color: var(--color-accent);
-    transform: translateY(-50%) scale(1.08) translateX(-2px);
-  }
-
-  /* ─── Post Link ────────────────────────── */
   .post-item a {
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
-    padding-top: var(--space-lg);
-    padding-bottom: var(--space-lg);
     text-decoration: none;
     color: var(--color-text);
-    position: relative;
-    z-index: 1;
   }
 
-  .post-item a:hover .post-title {
-    color: var(--color-text-secondary);
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .post-number {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--color-accent);
+    letter-spacing: 0.02em;
+  }
+
+  .post-item time {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
   }
 
   .post-title {
@@ -168,37 +402,15 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
     transition: color 0.2s ease;
   }
 
+  .post-item a:hover .post-title {
+    color: var(--color-text-secondary);
+  }
+
   .post-description {
     font-family: var(--font-body);
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
     line-height: 1.5;
-  }
-
-  /* ─── Date with Dot Decorator ──────────── */
-  .post-item time {
-    font-family: var(--font-heading);
-    font-size: 0.75rem;
-    color: var(--color-text-tertiary);
-    margin-top: var(--space-xs);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .post-item time::before {
-    content: '';
-    display: inline-block;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--color-border);
-    transition: background 0.3s ease, transform 0.3s ease;
-  }
-
-  .post-item:hover time::before {
-    background: var(--color-text-tertiary);
-    animation: pulse-dot 1.5s ease-in-out infinite;
   }
 
   /* ─── Pagination ────────────────────────── */
@@ -229,21 +441,50 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
     transition: color 0.2s ease, transform 0.2s ease;
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--space-xs);
   }
 
   .pagination-link:hover {
     color: var(--color-text);
-    transform: translateX(2px);
+    transform: translateX(3px);
   }
 
-  .pagination-link:first-child:hover {
-    transform: translateX(-2px);
+  .pagination-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .pagination-link:hover .pagination-arrow {
+    transform: translateX(2px);
   }
 
   .pagination-info {
     font-family: var(--font-heading);
     font-size: 0.75rem;
     color: var(--color-text-tertiary);
+  }
+
+  /* ─── Responsive ────────────────────────── */
+  @media (max-width: 820px) {
+    .hero {
+      border-radius: 16px;
+      width: 100%;
+      margin-left: 0;
+      height: 320px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      height: 260px;
+      border-radius: 12px;
+      margin-bottom: var(--space-lg);
+    }
+    .hero-title-char { font-size: 3.5rem; }
+    .hero-badge { font-size: 0.625rem; }
+    .hero-sub { font-size: 0.8125rem; }
+
+    .featured { padding: var(--space-md); }
+    .post-item { padding: var(--space-md); }
+    .post-item time::before { display: none; }
   }
 </style>
