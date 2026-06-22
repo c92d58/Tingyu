@@ -25,16 +25,6 @@ const restPosts = allPosts.slice(1, PAGE_SIZE);
   })} />
   <section class="home">
 
-    <!-- ─── Hero ─────────────────────────────── -->
-    <div class="hero" aria-hidden="true">
-      <div class="hero-content">
-        <h1 class="hero-title">
-          <span class="hero-title-char">聽</span>
-          <span class="hero-title-char">雨</span>
-        </h1>
-      </div>
-    </div>
-
     <!-- ─── Featured Post ─────────────────────── -->
     {featured && (
       <article class="featured ink-border">
@@ -96,65 +86,7 @@ const restPosts = allPosts.slice(1, PAGE_SIZE);
     max-width: var(--width-content);
   }
 
-  /* ─── Hero ──────────────────────────────── */
-  .hero {
-    position: relative;
-    width: 100%;
-    max-width: none;
-    margin-left: 0;
-    height: 180px;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: var(--space-2xl);
-    background: var(--color-surface);
-  }
-
-  @media (min-width: 821px) {
-    .hero {
-      width: 100%;
-      margin-left: 0;
-      border-radius: 20px;
-    }
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: var(--space-xl);
-  }
-
-  .hero-title {
-    display: flex;
-    gap: 0.15em;
-    margin-bottom: var(--space-sm);
-  }
-
-  .hero-title-char {
-    font-family: "Noto Serif SC", var(--font-display), serif;
-    font-size: 3.6rem;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: 0.08em;
-    line-height: 1;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-    animation: hero-char-in 1s ease both;
-  }
-
-  .hero-title-char:nth-child(2) {
-    animation-delay: 0.15s;
-  }
-
-  @keyframes hero-char-in {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
+  /* ─── Featured Post ──────────────────────── */
   .featured {
     margin-bottom: var(--space-xl);
     padding: var(--space-lg);
@@ -364,20 +296,9 @@ const restPosts = allPosts.slice(1, PAGE_SIZE);
 
   /* ─── Responsive ────────────────────────── */
   @media (max-width: 820px) {
-    .hero {
-      border-radius: 16px;
-      width: 100%;
-      margin-left: 0;
-      height: 200px;
-    }
   }
 
   @media (max-width: 600px) {
-    .hero {
-      height: 140px;
-      border-radius: 12px;
-      margin-bottom: var(--space-lg);
-    }
     .hero-title-char { font-size: 2.4rem; }
 
     .featured { padding: var(--space-md); }
