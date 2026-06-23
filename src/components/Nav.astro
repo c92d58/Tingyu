@@ -7,6 +7,9 @@ const currentPath = Astro.url.pathname;
     <img src="/logo.svg" alt="" class="nav-logo" width="28" height="28" />
   </a>
   <div class="nav-links">
+    <a href="/" class:list={[{ active: currentPath === "/" }]}>
+      <span>主頁</span>
+    </a>
     <a href="/tags" class:list={[{ active: currentPath.startsWith("/tags") }]}>
       <span>標籤</span>
     </a>
