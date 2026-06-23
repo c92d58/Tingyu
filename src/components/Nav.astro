@@ -4,7 +4,8 @@ const currentPath = Astro.url.pathname;
 
 <nav class="nav">
   <a href="/" class="nav-brand">
-    <span class="nav-logo">W</span>
+    <img src="/logo.svg" alt="WAHSUNN" class="nav-logo" width="28" height="28" />
+    <span class="nav-brand-text">WAHSUNN</span>
   </a>
   <div class="nav-links">
     <a href="/tags" class:list={[{ active: currentPath.startsWith("/tags") }]}>
@@ -53,6 +54,10 @@ const currentPath = Astro.url.pathname;
     color: var(--accent);
   }
   .nav-logo {
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .nav-brand-text {
     background: var(--gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

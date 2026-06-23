@@ -1,91 +1,65 @@
 ---
 import Layout from "../components/Layout.astro";
-import Heading from "../components/Heading.astro";
 import { getPublishedPosts } from "../lib/posts";
 
 const allPosts = await getPublishedPosts();
 
-// Compute tag counts for the tag cloud
 const tagCounts = new Map<string, number>();
 for (const post of allPosts) {
   for (const tag of post.data.tags) {
     tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
   }
 }
-const topTags = [...tagCounts.entries()]
-  .sort((a, b) => b[1] - a[1])
-  .slice(0, 12);
-
-// Serialize for JS
+const topTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12);
 const tagSuggestions = JSON.stringify(topTags);
 const totalArticles = allPosts.length;
 ---
 
-<Layout title="搜尋 — WAHSUNNの自留地" description="搜尋網站文章，或隨機發現好文章。">
+<Layout title="搜尋 — WAHSUNNの自留地" description="全文搜尋文章，或隨機發現好內容。">
   <section class="search-page">
-    <!-- Hero -->
-    <header class="search-hero">
-      <Heading as="h1">
-        <span class="hero-heading-main">搜尋</span>
-      </Heading>
-      <p class="hero-subtitle">全文搜尋 {totalArticles} 篇文章，或隨機發現</p>
+
+    <header class="page-hero">
+      <h1 class="page-hero-title">
+        <span class="hero-gradient">{totalArticles}</span> 篇文章
+      </h1>
+      <p class="page-hero-meta">全文搜尋，或隨機發現</p>
     </header>
 
-    <!-- Search Input -->
-    <div class="search-input-wrap">
+    <div class="search-input-wrap card">
       <div class="search-icon">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="7.5" cy="7.5" r="5.5"/>
-          <path d="M11.5 11.5 L16 16"/>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="7.5" cy="7.5" r="5.5"/><path d="M11.5 11.5 L16 16"/>
         </svg>
       </div>
-      <input
-        type="text"
-        id="search-input"
-        placeholder="搜尋文章、標籤..."
-        autocomplete="off"
-        autofocus
-      />
-      <button id="search-clear" class="search-clear" aria-label="清除搜尋">
+      <input type="text" id="search-input" placeholder="輸入關鍵字..." autocomplete="off" autofocus />
+      <button id="search-clear" class="search-clear" aria-label="清除">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3 L11 11 M11 3 L3 11"/></svg>
       </button>
     </div>
 
-    <!-- Initial State: Suggestions -->
     <div id="initial-state" class="initial-state">
-      <!-- Tag Cloud -->
-      <div class="suggest-section">
+      <div class="suggest-section card">
         <div class="suggest-header">
-          <h2 class="suggest-title">熱門標籤</h2>
-          <span class="suggest-count">{topTags.length} 個</span>
+          <h2 class="suggest-title">熱門主題</h2>
+          <span class="suggest-count">{topTags.length}</span>
         </div>
         <div class="tag-cloud" id="tag-cloud">
           {topTags.map(([tag, count]) => {
             const size = 0.85 + (count / topTags[0][1]) * 0.5;
             return (
-              <button
-                class="tag-pill"
-                data-tag={tag}
-                style={`--pill-scale:${size}`}
-                title={`${tag}（${count} 篇文章）`}
-              >
-                {tag}
-              </button>
+              <button class="tag-pill" data-tag={tag} style={`--pill-scale:${size}`} title={`${tag}（${count} 篇）`}>{tag}</button>
             );
           })}
         </div>
       </div>
 
-      <!-- Random Articles -->
-      <div class="suggest-section">
+      <div class="suggest-section card">
         <div class="suggest-header">
-          <h2 class="suggest-title">你可能會喜歡</h2>
+          <h2 class="suggest-title">隨機推薦</h2>
           <button id="shuffle-btn" class="shuffle-btn" title="換一批">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 4 L4 4 C5.5 4 6.5 2 8 2 L13 2"/>
-              <path d="M1 10 L4 10 C5.5 10 6.5 12 8 12 L13 12"/>
-              <path d="M10 6 L13 4 L10 2"/>
-              <path d="M10 8 L13 10 L10 12"/>
+              <path d="M1 4 L4 4 C5.5 4 6.5 2 8 2 L13 2"/><path d="M1 10 L4 10 C5.5 10 6.5 12 8 12 L13 12"/>
+              <path d="M10 6 L13 4 L10 2"/><path d="M10 8 L13 10 L10 12"/>
             </svg>
             換一批
           </button>
@@ -94,436 +68,348 @@ const totalArticles = allPosts.length;
       </div>
     </div>
 
-    <!-- Search Results -->
     <ul id="search-results" class="search-results"></ul>
     <div id="search-empty" class="search-empty" hidden>
-      <div class="empty-icon">🔍</div>
-      <p>找不到「<span id="empty-query"></span>」相關的文章</p>
-      <p class="empty-hint">試試其他關鍵字，或瀏覽熱門標籤</p>
+      <p>找不到相關文章</p>
+      <p class="empty-hint">試試其他關鍵字，或瀏覽熱門主題</p>
     </div>
   </section>
 </Layout>
 
-<!-- Tag data for JS -->
 <div id="tag-data" style="display:none">{tagSuggestions}</div>
 
 <script>
-  interface SearchEntry {
-    slug: string;
-    title: string;
-    description: string;
-    date: string;
-    tags: string[];
-    body: string;
-  }
+interface SearchEntry { slug: string; title: string; description: string; date: string; tags: string[]; body: string; }
 
 const TAG_SUGGESTIONS: [string, number][] = JSON.parse(document.getElementById("tag-data")?.textContent || "[]");
+let index: SearchEntry[] = [];
+let loaded = false;
 
-  let index: SearchEntry[] = [];
-  let loaded = false;
+const input = document.getElementById("search-input") as HTMLInputElement;
+const clearBtn = document.getElementById("search-clear") as HTMLButtonElement;
+const resultsList = document.getElementById("search-results") as HTMLUListElement;
+const emptyMsg = document.getElementById("search-empty") as HTMLDivElement;
+const initialState = document.getElementById("initial-state") as HTMLDivElement;
+const randomPosts = document.getElementById("random-posts") as HTMLDivElement;
+const shuffleBtn = document.getElementById("shuffle-btn") as HTMLButtonElement;
+const tagCloud = document.getElementById("tag-cloud") as HTMLDivElement;
 
-  const input = document.getElementById("search-input") as HTMLInputElement;
-  const clearBtn = document.getElementById("search-clear") as HTMLButtonElement;
-  const resultsList = document.getElementById("search-results") as HTMLUListElement;
-  const emptyMsg = document.getElementById("search-empty") as HTMLDivElement;
-  const emptyQuery = document.getElementById("empty-query") as HTMLSpanElement;
-  const initialState = document.getElementById("initial-state") as HTMLDivElement;
-  const randomPosts = document.getElementById("random-posts") as HTMLDivElement;
-  const shuffleBtn = document.getElementById("shuffle-btn") as HTMLButtonElement;
-  const tagCloud = document.getElementById("tag-cloud") as HTMLDivElement;
-
-  // ─── Load Index ────────────────────────────
-  async function loadIndex(): Promise<void> {
-    if (loaded) return;
-    try {
-      const res = await fetch("/search-index.json");
-      if (!res.ok) throw new Error(`Failed: ${res.status}`);
-      index = await res.json();
-      loaded = true;
-      renderRandomPosts();
-    } catch (err) {
-      console.error(err);
-      randomPosts.innerHTML = `<p class="error-hint">暫時無法載入推薦，請稍後再試。</p>`;
-    }
-  }
-
-  // ─── Random Suggestions ────────────────────
-  function pickRandom(n: number): SearchEntry[] {
-    if (index.length === 0) return [];
-    const shuffled = [...index];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled.slice(0, n);
-  }
-
-  function formatDate(iso: string): string {
-    return new Date(iso).toLocaleDateString("en-US", {
-      year: "numeric", month: "long", day: "numeric",
-    });
-  }
-
-  function escapeHtml(str: string): string {
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
-  function renderRandomPosts(): void {
-    const picks = pickRandom(3);
-    randomPosts.innerHTML = picks.map((p) => `
-      <a href="/posts/${encodeURIComponent(p.slug)}" class="random-card">
-        <span class="random-tags">${p.tags.slice(0, 3).map((t) => `<span class="random-tag">${escapeHtml(t)}</span>`).join("")}</span>
-        <span class="random-title">${escapeHtml(p.title)}</span>
-        <span class="random-desc">${escapeHtml(p.description)}</span>
-        <time datetime="${escapeHtml(p.date)}">${formatDate(p.date)}</time>
-      </a>
-    `).join("");
-  }
-
-  // ─── Tag Click Handler ─────────────────────
-  tagCloud.addEventListener("click", (e) => {
-    const btn = (e.target as HTMLElement).closest("[data-tag]") as HTMLButtonElement;
-    if (!btn) return;
-    input.value = btn.dataset.tag ?? "";
-    input.dispatchEvent(new Event("input"));
-    input.focus();
-  });
-
-  shuffleBtn.addEventListener("click", () => {
+async function loadIndex(): Promise<void> {
+  if (loaded) return;
+  try {
+    const res = await fetch("/search-index.json");
+    if (!res.ok) throw new Error(`Failed: ${res.status}`);
+    index = await res.json();
+    loaded = true;
     renderRandomPosts();
-  });
-
-  // ─── Search Logic ──────────────────────────
-  function search(query: string): SearchEntry[] {
-    const terms = query.toLowerCase().split(/\\s+/).filter(Boolean);
-    if (terms.length === 0) return [];
-
-    return index.filter((entry) => {
-      const haystack = `${entry.title} ${entry.description} ${entry.tags.join(" ")} ${entry.body}`.toLowerCase();
-      return terms.every((term) => haystack.includes(term));
-    });
+  } catch (err) {
+    console.error(err);
+    randomPosts.innerHTML = `<p class="error-hint">暫時無法載入推薦</p>`;
   }
+}
 
-  function getSnippet(entry: SearchEntry, query: string): string | null {
-    const terms = query.toLowerCase().split(/\\s+/).filter(Boolean);
-    const titleDesc = `${entry.title} ${entry.description} ${entry.tags.join(" ")}`.toLowerCase();
-    if (terms.every((t) => titleDesc.includes(t))) return null;
-
-    const bodyLower = entry.body.toLowerCase();
-    for (const term of terms) {
-      const pos = bodyLower.indexOf(term);
-      if (pos === -1) continue;
-      const start = Math.max(0, pos - 40);
-      const end = Math.min(entry.body.length, pos + term.length + 80);
-      return (start > 0 ? "…" : "") + entry.body.slice(start, end).trim() + (end < entry.body.length ? "…" : "");
-    }
-    return null;
+function pickRandom(n: number): SearchEntry[] {
+  if (index.length === 0) return [];
+  const shuffled = [...index];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
+  return shuffled.slice(0, n);
+}
 
-  function render(results: SearchEntry[], query: string): void {
-    resultsList.innerHTML = "";
-    initialState.hidden = results.length > 0 || query.trim() !== "";
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+}
 
-    if (query.trim() === "") {
-      emptyMsg.hidden = true;
-      return;
-    }
+function escapeHtml(str: string): string {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
 
-    if (results.length === 0) {
-      emptyQuery.textContent = query;
-      emptyMsg.hidden = false;
-      return;
-    }
+function renderRandomPosts(): void {
+  const picks = pickRandom(3);
+  randomPosts.innerHTML = picks.map((p) => `
+    <a href="/posts/${encodeURIComponent(p.slug)}" class="random-card">
+      <span class="random-meta">${p.tags.slice(0, 2).map((t) => `<span class="random-tag">${escapeHtml(t)}</span>`).join("")} · ${formatDate(p.date)}</span>
+      <span class="random-title">${escapeHtml(p.title)}</span>
+    </a>
+  `).join("");
+}
 
-    emptyMsg.hidden = true;
+tagCloud.addEventListener("click", (e) => {
+  const btn = (e.target as HTMLElement).closest("[data-tag]") as HTMLButtonElement;
+  if (!btn) return;
+  input.value = btn.dataset.tag ?? "";
+  input.dispatchEvent(new Event("input"));
+  input.focus();
+});
 
-    for (const entry of results) {
-      const snippet = getSnippet(entry, query);
-      const li = document.createElement("li");
-      li.className = "search-result-item";
-      li.innerHTML = `
-        <a href="/posts/${encodeURIComponent(entry.slug)}">
-          <span class="result-tags">${entry.tags.slice(0, 3).map((t) => `<span class="result-tag">${escapeHtml(t)}</span>`).join("")}</span>
-          <span class="result-title">${escapeHtml(entry.title)}</span>
-          <span class="result-description">${escapeHtml(entry.description)}</span>
-          ${snippet ? `<span class="result-snippet">${escapeHtml(snippet)}</span>` : ""}
-          <time datetime="${escapeHtml(entry.date)}">${formatDate(entry.date)}</time>
-        </a>
-      `;
-      resultsList.appendChild(li);
-    }
+shuffleBtn.addEventListener("click", () => { renderRandomPosts(); });
+
+function search(query: string): SearchEntry[] {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  if (terms.length === 0) return [];
+  return index.filter((entry) => {
+    const haystack = `${entry.title} ${entry.description} ${entry.tags.join(" ")} ${entry.body}`.toLowerCase();
+    return terms.every((term) => haystack.includes(term));
+  });
+}
+
+function render(results: SearchEntry[], query: string): void {
+  resultsList.innerHTML = "";
+  initialState.hidden = results.length > 0 || query.trim() !== "";
+  if (query.trim() === "") { emptyMsg.hidden = true; return; }
+  if (results.length === 0) { emptyMsg.hidden = false; return; }
+  emptyMsg.hidden = true;
+  for (const entry of results) {
+    const li = document.createElement("li");
+    li.className = "search-result-item card";
+    li.innerHTML = `
+      <a href="/posts/${encodeURIComponent(entry.slug)}" class="result-link">
+        <span class="result-meta">${entry.tags.slice(0, 2).map((t) => `<span class="result-tag">${escapeHtml(t)}</span>`).join("")} · ${formatDate(entry.date)}</span>
+        <span class="result-title">${escapeHtml(entry.title)}</span>
+        <span class="result-desc">${escapeHtml(entry.description)}</span>
+      </a>
+    `;
+    resultsList.appendChild(li);
   }
+}
 
-  // ─── Event Listeners ───────────────────────
-  let debounceTimer: ReturnType<typeof setTimeout>;
-
-  input.addEventListener("input", () => {
-    clearTimeout(debounceTimer);
-    clearBtn.classList.toggle("visible", input.value.length > 0);
-    debounceTimer = setTimeout(async () => {
-      await loadIndex();
-      render(search(input.value), input.value);
-    }, 200);
-  });
-
-  clearBtn.addEventListener("click", () => {
-    input.value = "";
-    clearBtn.classList.remove("visible");
-    input.dispatchEvent(new Event("input"));
-    input.focus();
-  });
-
-  // ─── Init ──────────────────────────────────
-  loadIndex();
+let debounceTimer: ReturnType<typeof setTimeout>;
+input.addEventListener("input", () => {
+  clearTimeout(debounceTimer);
+  clearBtn.classList.toggle("visible", input.value.length > 0);
+  debounceTimer = setTimeout(async () => {
+    await loadIndex();
+    render(search(input.value), input.value);
+  }, 200);
+});
+clearBtn.addEventListener("click", () => {
+  input.value = "";
+  clearBtn.classList.remove("visible");
+  input.dispatchEvent(new Event("input"));
+  input.focus();
+});
+loadIndex();
 </script>
 
 <style>
-  .search-page {
-    max-width: var(--width-content);
-  }
+  .search-page { padding: 3rem 0 5rem; }
 
-  /* ─── Hero ──────────────────────────────── */
-  .search-hero {
-    margin-bottom: var(--space-lg);
-    animation: fadeUp 0.5s ease both;
+  .page-hero {
+    text-align: center;
+    padding: 2rem 0 2.5rem;
   }
-
-  .hero-heading-main {
-    display: inline-block;
-    position: relative;
+  .page-hero-title {
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
   }
-  .hero-heading-main::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 15%;
-    right: 15%;
-    height: 2px;
-    background: var(--color-accent);
-    opacity: 0.3;
-    border-radius: 1px;
+  .hero-gradient {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
-
-  .hero-subtitle {
-    font-family: var(--font-body);
-    font-size: 0.9375rem;
-    color: var(--color-text-tertiary);
-    margin-top: var(--space-sm);
+  .page-hero-meta {
+    font-size: 1rem;
+    color: var(--text-secondary);
     font-style: italic;
-    animation: fadeIn 0.6s ease 0.15s both;
   }
 
-  /* ─── Search Input ───────────────────────── */
   .search-input-wrap {
     position: relative;
-    margin-bottom: var(--space-xl);
+    margin-bottom: 2rem;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     animation: fadeUp 0.5s ease 0.1s both;
   }
-
-  .search-icon {
-    position: absolute;
-    left: var(--space-md);
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--color-text-tertiary);
-    pointer-events: none;
-    transition: color 0.2s ease;
-  }
-
-  #search-input:focus ~ .search-icon {
-    color: var(--color-text);
-  }
-
+  .search-icon { color: var(--text-tertiary); display: flex; }
   #search-input {
-    width: 100%;
+    flex: 1;
     font-family: var(--font-heading);
     font-size: 1rem;
-    padding: var(--space-md) var(--space-xl) var(--space-md) calc(var(--space-md) * 2 + 18px);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    background: var(--color-surface);
-    color: var(--color-text);
+    border: none;
+    background: transparent;
+    color: var(--text);
     outline: none;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
   }
-
-  #search-input:focus {
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 1px var(--color-ink-light);
-  }
-
-  #search-input::placeholder {
-    color: var(--color-text-tertiary);
-  }
-
+  #search-input::placeholder { color: var(--text-tertiary); }
   .search-clear {
-    position: absolute;
-    right: var(--space-sm);
-    top: 50%;
-    transform: translateY(-50%);
     background: none;
     border: none;
-    color: var(--color-text-tertiary);
+    color: var(--text-tertiary);
     cursor: pointer;
-    padding: var(--space-sm);
+    padding: 0.25rem;
     border-radius: 50%;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
+    transition: opacity 0.2s;
   }
+  .search-clear.visible { opacity: 1; pointer-events: auto; }
+  .search-clear:hover { color: var(--text); }
 
-  .search-clear.visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .search-clear:hover {
-    color: var(--color-text);
-    background: var(--color-ink-light);
-  }
-
-  /* ─── Initial State ──────────────────────── */
-  .initial-state {
-    animation: fadeUp 0.5s ease 0.15s both;
-  }
+  .initial-state { animation: fadeUp 0.5s ease 0.15s both; }
 
   .suggest-section {
-    margin-bottom: var(--space-xl);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .suggest-section:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
   }
 
   .suggest-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--space-md);
+    margin-bottom: 1rem;
   }
-
   .suggest-title {
     font-family: var(--font-heading);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.02em;
+    color: var(--text);
   }
-
   .suggest-count {
     font-family: var(--font-heading);
-    font-size: 0.6875rem;
-    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
   }
-
   .shuffle-btn {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-xs);
+    gap: 0.375rem;
     font-family: var(--font-heading);
     font-size: 0.75rem;
-    color: var(--color-text-tertiary);
+    color: var(--text-secondary);
     background: none;
-    border: 1px solid var(--color-border);
-    border-radius: 100px;
-    padding: 0.2rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
     cursor: pointer;
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition: all 0.2s;
   }
-
   .shuffle-btn:hover {
-    color: var(--color-text);
-    border-color: var(--color-text-tertiary);
-    background: var(--color-ink-light);
+    color: var(--text);
+    border-color: var(--accent);
+    background: var(--accent-subtle);
   }
 
-  /* ─── Tag Cloud ──────────────────────────── */
-  .tag-cloud {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
-  }
-
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .tag-pill {
     --pill-scale: 1;
-    display: inline-block;
     font-family: var(--font-heading);
     font-size: calc(0.8125rem * var(--pill-scale));
-    color: var(--color-text-secondary);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 100px;
+    color: var(--text-secondary);
+    background: var(--accent-subtle);
+    border: 1px solid transparent;
+    border-radius: 999px;
     padding: 0.3rem 0.85rem;
     cursor: pointer;
-    transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    transition: all 0.25s;
     line-height: 1.3;
   }
-
   .tag-pill:hover {
-    border-color: var(--color-accent);
-    background: var(--color-accent-subtle);
-    color: var(--color-text);
+    border-color: var(--accent);
+    color: var(--text);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--color-ink-medium);
+    box-shadow: var(--shadow-sm);
   }
 
-  /* ─── Random Posts ───────────────────────── */
-  .random-posts {
+  .random-posts { display: flex; flex-direction: column; gap: 0.75rem; }
+  .random-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-  }
-
-  :global(.random-card) {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
-    padding: var(--space-md) var(--space-lg);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
+    gap: 0.375rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
     text-decoration: none;
-    color: var(--color-text);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
+    color: var(--text);
+    transition: background 0.2s;
+  }
+  .random-card:hover { background: var(--surface-hover); }
+  .random-meta {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+  }
+  .random-tag {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-subtle);
+    border-radius: 999px;
+  }
+  .random-title {
+    font-family: var(--font-heading);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .random-card:hover .random-title {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  :global(.random-card:hover) {
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 1px var(--color-ink-light), 0 4px 16px var(--color-ink-medium);
+  .search-results { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+  .search-result-item {
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+  }
+  .search-result-item:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
   }
-
-  :global(.random-tags) {
-    display: flex;
-    gap: var(--space-xs);
-    flex-wrap: wrap;
-  }
-
-  :global(.random-tag) {
+  .result-link { display: flex; flex-direction: column; gap: 0.375rem; text-decoration: none; color: var(--text); }
+  .result-meta {
     font-family: var(--font-heading);
-    font-size: 0.6875rem;
-    color: var(--color-accent);
-    padding: 0.05rem 0.4rem;
-    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
-    border-radius: 100px;
-    line-height: 1.3;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
   }
-
-  :global(.random-title) {
+  .result-tag {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-subtle);
+    border-radius: 999px;
+  }
+  .result-title {
     font-family: var(--font-heading);
     font-size: 1rem;
     font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-    transition: color 0.2s ease;
+    line-height: 1.35;
   }
-
-  :global(.random-card:hover .random-title) {
-    color: var(--color-text-secondary);
+  .search-result-item:hover .result-title {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
-
-  :global(.random-desc) {
-    font-family: var(--font-body);
+  .result-desc {
     font-size: 0.875rem;
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -531,138 +417,16 @@ const TAG_SUGGESTIONS: [string, number][] = JSON.parse(document.getElementById("
     overflow: hidden;
   }
 
-  :global(.random-card time) {
-    font-family: var(--font-heading);
-    font-size: 0.7rem;
-    color: var(--color-text-tertiary);
-    margin-top: var(--space-xs);
-  }
-
-  .error-hint {
-    font-family: var(--font-heading);
-    font-size: 0.8125rem;
-    color: var(--color-text-tertiary);
-    font-style: italic;
-  }
-
-  /* ─── Search Results ──────────────────────── */
-  .search-results {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-  }
-
-  :global(.search-result-item) {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
-  }
-
-  :global(.search-result-item:hover) {
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 1px var(--color-ink-light), 0 4px 16px var(--color-ink-medium);
-    transform: translateY(-2px);
-  }
-
-  :global(.search-result-item a) {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
-    padding: var(--space-md) var(--space-lg);
-    text-decoration: none;
-    color: var(--color-text);
-  }
-
-  :global(.result-tags) {
-    display: flex;
-    gap: var(--space-xs);
-    flex-wrap: wrap;
-  }
-
-  :global(.result-tag) {
-    font-family: var(--font-heading);
-    font-size: 0.6875rem;
-    color: var(--color-accent);
-    padding: 0.05rem 0.4rem;
-    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
-    border-radius: 100px;
-    line-height: 1.3;
-  }
-
-  :global(.result-title) {
-    font-family: var(--font-heading);
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-    transition: color 0.15s ease;
-  }
-
-  :global(.search-result-item a:hover .result-title) {
-    color: var(--color-text-secondary);
-  }
-
-  :global(.result-description) {
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-  }
-
-  :global(.search-result-item time) {
-    font-family: var(--font-heading);
-    font-size: 0.7rem;
-    color: var(--color-text-tertiary);
-    margin-top: var(--space-xs);
-  }
-
-  :global(.result-snippet) {
-    font-family: var(--font-body);
-    font-size: 0.8125rem;
-    color: var(--color-text-tertiary);
-    line-height: 1.5;
-    font-style: italic;
-  }
-
-  /* ─── Empty State ────────────────────────── */
   .search-empty {
     text-align: center;
-    padding: var(--space-2xl) var(--space-lg);
-    animation: fadeUp 0.3s ease both;
-  }
-
-  .empty-icon {
-    font-size: 2rem;
-    margin-bottom: var(--space-md);
-    opacity: 0.5;
-  }
-
-  .search-empty p {
-    font-family: var(--font-heading);
-    font-size: 0.9375rem;
-    color: var(--color-text-secondary);
-  }
-
-  .search-empty #empty-query {
-    font-weight: 600;
-    color: var(--color-text);
-  }
-
-  .empty-hint {
-    font-family: var(--font-body) !important;
-    font-size: 0.8125rem !important;
-    color: var(--color-text-tertiary) !important;
-    margin-top: var(--space-sm);
+    padding: 3rem 0;
+    color: var(--text-tertiary);
     font-style: italic;
   }
+  .empty-hint { font-size: 0.875rem; margin-top: 0.5rem; }
 
-  /* ─── Responsive ────────────────────────── */
   @media (max-width: 600px) {
-    :global(.search-result-item a) { padding: var(--space-sm) var(--space-md); }
-    :global(.random-card) { padding: var(--space-sm) var(--space-md); }
-    .search-empty { padding: var(--space-xl) var(--space-md); }
+    .page-hero-title { font-size: 1.75rem; }
+    .suggest-section { padding: 1.25rem; }
   }
 </style>
