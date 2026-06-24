@@ -110,7 +110,7 @@ const ogImageAbsolute = new URL(ogImage, Astro.site).href;
         function qsa(s, ctx) { return (ctx || document).querySelectorAll(s); }
 
         // ─── 1. Scroll Reveal ────────────────
-        const revealTargets = qsa('.reveal, .post-item, .featured, .hero-title, .hero-desc, h2, h3, blockquote, figure, .pagination, .section-label-wrap');
+        const revealTargets = qsa('.reveal, .post-item, .featured, .hero-title, .hero-desc, blockquote, figure, .pagination, .section-label-wrap, h2, h3');
         if (revealTargets.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           const ro = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -121,7 +121,7 @@ const ogImageAbsolute = new URL(ogImage, Astro.site).href;
             });
           }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
           revealTargets.forEach(el => {
-            if (!el.classList.contains('animate-fade-up') && !el.classList.contains('animate-fade-in')) {
+            if (!el.classList.contains('animate-fade-up') && !el.classList.contains('animate-fade-in') && !el.classList.contains('revealed')) {
               el.classList.add('reveal-ready');
             }
             ro.observe(el);
@@ -213,63 +213,70 @@ const ogImageAbsolute = new URL(ogImage, Astro.site).href;
     position: absolute;
     border-radius: 50%;
     filter: blur(80px);
-    opacity: 0.35;
+    opacity: 0.25;
     will-change: transform;
+    transition: opacity 1s ease;
   }
   .blob-1 {
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(217,119,6,0.15), transparent 70%);
-    top: -10%;
-    left: -5%;
-    animation: blobFloat1 20s ease-in-out infinite;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(217,119,6,0.2), transparent 70%);
+    top: -15%;
+    left: -10%;
+    animation: blobFloat1 25s ease-in-out infinite;
   }
   .blob-2 {
-    width: 450px; height: 450px;
-    background: radial-gradient(circle, rgba(245,158,11,0.12), transparent 70%);
-    bottom: -5%;
-    right: -8%;
-    animation: blobFloat2 25s ease-in-out infinite;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(245,158,11,0.18), transparent 70%);
+    bottom: -10%;
+    right: -10%;
+    animation: blobFloat2 30s ease-in-out infinite;
   }
   .blob-3 {
-    width: 350px; height: 350px;
-    background: radial-gradient(circle, rgba(251,191,36,0.1), transparent 70%);
-    top: 40%;
-    left: 60%;
-    animation: blobFloat3 18s ease-in-out infinite;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(251,191,36,0.15), transparent 70%);
+    top: 50%;
+    left: 50%;
+    animation: blobFloat3 20s ease-in-out infinite;
   }
 
   @keyframes blobFloat1 {
     0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    33% { transform: translate(60px, -40px) scale(1.1) rotate(5deg); }
-    66% { transform: translate(-30px, 50px) scale(0.95) rotate(-3deg); }
+    25% { transform: translate(80px, -60px) scale(1.15) rotate(5deg); }
+    50% { transform: translate(-40px, 20px) scale(0.9) rotate(-3deg); }
+    75% { transform: translate(30px, 60px) scale(1.05) rotate(2deg); }
   }
   @keyframes blobFloat2 {
     0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    33% { transform: translate(-50px, 30px) scale(1.15) rotate(-4deg); }
-    66% { transform: translate(40px, -60px) scale(0.9) rotate(6deg); }
+    25% { transform: translate(-60px, 40px) scale(1.2) rotate(-5deg); }
+    50% { transform: translate(50px, -30px) scale(0.85) rotate(3deg); }
+    75% { transform: translate(-20px, -50px) scale(1.1) rotate(-2deg); }
   }
   @keyframes blobFloat3 {
     0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(70px, 40px) scale(1.2); }
+    33% { transform: translate(-60px, -40px) scale(1.25); }
+    66% { transform: translate(80px, 30px) scale(0.9); }
   }
 
   @media (prefers-color-scheme: dark) {
-    .ambient-blob { opacity: 0.2; }
-    .blob-1 { background: radial-gradient(circle, rgba(217,119,6,0.1), transparent 70%); }
-    .blob-2 { background: radial-gradient(circle, rgba(100,50,200,0.08), transparent 70%); }
-    .blob-3 { background: radial-gradient(circle, rgba(245,158,11,0.06), transparent 70%); }
+    .ambient-blob { opacity: 0.15; }
+    .blob-1 { background: radial-gradient(circle, rgba(217,119,6,0.12), transparent 70%); }
+    .blob-2 { background: radial-gradient(circle, rgba(130,80,220,0.1), transparent 70%); }
+    .blob-3 { background: radial-gradient(circle, rgba(245,158,11,0.08), transparent 70%); }
   }
 
   /* ─── Scroll Reveal ─────────────────────── */
   .reveal-ready {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(30px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .reveal-ready.revealed {
     opacity: 1;
     transform: translateY(0);
+  }
+  .animate-fade-up {
+    animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   /* ─── Code Copy Button ──────────────────── */
