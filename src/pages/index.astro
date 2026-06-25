@@ -5,7 +5,7 @@ import { getPublishedPosts } from "../lib/posts";
 
 const allPosts = await getPublishedPosts();
 const featured = allPosts[0];
-const restPosts = allPosts.slice(1);
+const restPosts = allPosts.slice(1, 9);
 const totalPages = Math.ceil(allPosts.length / 9);
 ---
 
@@ -53,7 +53,7 @@ const totalPages = Math.ceil(allPosts.length / 9);
             <li class="post-item ink-border animate-fade-up delay-{Math.min(i + 1, 6)}" data-index={i + 2}>
               <a href={`/posts/${post.id}`}>
                 <span class="post-meta">
-                  <span class="post-number">#{(i + 2).toString().padStart(2, '0')}</span>
+                  <span class="post-number">#{(i + 1).toString().padStart(2, '0')}</span>
                   <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
                 </span>
                 <span class="post-title">{post.data.title}</span>
