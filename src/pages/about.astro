@@ -82,7 +82,7 @@ import Heading from "../components/Heading.astro";
   }
   .hero-heading-main {
     font-family: var(--font-heading);
-    font-size: 2.25rem;
+    font-size: 1.75rem;
     font-weight: 800;
     background: var(--gradient);
     -webkit-background-clip: text;
@@ -99,9 +99,7 @@ import Heading from "../components/Heading.astro";
     max-width: 580px;
     margin: 0 auto;
   }
-  .about-card h3 {
-    font-family: var(--font-heading);
-    font-size: 1.125rem;
+  .about-card h3 {\n    font-family: var(--font-heading);\n    font-size: 1rem;
     font-weight: 700;
     margin: 2rem 0 0.75rem;
     position: relative;
@@ -115,8 +113,7 @@ import Heading from "../components/Heading.astro";
     background: var(--gradient);
     border-radius: 2px;
   }
-  .about-card p {
-    font-size: 0.9375rem;
+  .about-card p {\n    font-size: 0.875rem;
     line-height: 1.75;
     color: var(--text-secondary);
     margin-bottom: 1rem;
@@ -127,7 +124,7 @@ import Heading from "../components/Heading.astro";
   }
 
   .manifesto-lead {
-    font-size: 1.125rem !important;
+    font-size: 1rem !important;
     font-style: italic;
     color: var(--text) !important;
     font-weight: 500;
@@ -191,8 +188,7 @@ import Heading from "../components/Heading.astro";
     letter-spacing: 0.08em;
     color: var(--text-tertiary);
   }
-  .contact-value {
-    font-size: 0.9375rem;
+  .contact-value {\n    font-size: 0.875rem;
     color: var(--text-secondary);
     text-decoration: none;
     transition: color 0.2s;
@@ -204,8 +200,8 @@ import Heading from "../components/Heading.astro";
   /* ─── Responsive ────────────────────────── */
   @media (max-width: 600px) {
     .about-hero { padding: 1.5rem 0; }
-    .hero-heading-main { font-size: 1.75rem; }
+    .hero-heading-main { font-size: 1.5rem; }
     .about-card { padding: 1.25rem; }
-    .manifesto-lead { font-size: 1rem !important; padding: 0.75rem 1rem; }
+    .manifesto-lead { font-size: 0.9375rem !important; padding: 0.75rem 1rem; }
   }
 </style>

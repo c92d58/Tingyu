@@ -103,7 +103,7 @@ const { tag, posts, totalPages, currentPage } = Astro.props;
   .tag-title-link { text-decoration: none; color: var(--text); }
   .tag-title {
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.2;
@@ -149,7 +149,7 @@ const { tag, posts, totalPages, currentPage } = Astro.props;
   }
   .post-title {
     font-family: var(--font-heading);
-    font-size: 1rem;
+    font-size: 0.9375rem;
     font-weight: 600;
     line-height: 1.35;
     transition: color 0.2s;
@@ -198,7 +198,7 @@ const { tag, posts, totalPages, currentPage } = Astro.props;
   .pagination-link:hover { color: var(--accent); }
 
   @media (max-width: 600px) {
-    .tag-title { font-size: 1.5rem; }
+    .tag-title { font-size: 1.25rem; }
     .post-item { padding: 1rem; }
   }
 </style>
